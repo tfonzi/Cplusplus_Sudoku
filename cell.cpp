@@ -53,3 +53,11 @@ void cell::set_value(int value){
     this->value = value;
 }
 
+void cell::set_start(int value, bool isStarting, int row, int col, int box){
+    this->value = value;
+    this->isStarting = isStarting;
+    this->row = row;
+    this->col = col;
+    this->box = box;
+}
+

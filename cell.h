@@ -36,6 +36,10 @@ public:
 
     void set_value(int value);
 
+    void set_start(int value, bool isStarting, int row, int col, int box);
+
+
+
 
 };
 
