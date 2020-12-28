@@ -15,6 +15,10 @@ cell::cell(int value, bool isStarting, int row, int col, int box)
     this->row = row;
     this->col = col;
     this->box = box;
+
+    bool zero_notes[9] = {false,false,false,false,false,false,false,false,false};
+    this->set_notes(zero_notes);
+
 }
 
 int cell::get_row()
@@ -41,7 +45,7 @@ bool* cell::get_notes(){
     return this->notes;
 }
 
-void cell::set_notes(bool* notes[9])
+void cell::set_notes(bool* notes)
 {
     for(int i = 0; i < 9; i++)
     {
@@ -59,5 +63,9 @@ void cell::set_start(int value, bool isStarting, int row, int col, int box){
     this->row = row;
     this->col = col;
     this->box = box;
+
+
+    bool zero_notes[9] = {false,false,false,false,false,false,false,false,false};
+    this->set_notes(zero_notes);
 }
 

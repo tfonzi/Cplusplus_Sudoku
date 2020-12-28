@@ -1,20 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    //String is 81 long. each character represents value of sudoku. Zeros are blank.
+    MainWindow::sudoku_array.reserve(81);
+
     ui->setupUi(this);
 }
 
 
-cell* MainWindow::start(string sudoku_string)
+void MainWindow::start(string sudoku_string)
 {
-//Creates cell array "sudoku_array" using input string.
-//String is 81 long. each character represents value of sudoku. Zeros are blank.
 
-    cell* sudoku_array = new cell[81];
 
     int row = -1; //Because it will iterate when i == 0
     int col = 0;
@@ -57,10 +58,8 @@ cell* MainWindow::start(string sudoku_string)
 
         box = box_chart[make_pair(row_region,col_region)];
 
-        sudoku_array[i].set_start(value, isStarting, row, col, box);
+        MainWindow::sudoku_array.push_back(cell(value, isStarting, row, col, box));
     }
-
-    return sudoku_array;
 
 
 }
@@ -80,5 +79,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    cell* sudoku_array = start("004300209005009001070060043006002087190007400050083000600000105003508690042910300");
+
+    start("004300209005009001070060043006002087190007400050083000600000105003508690042910300");
+
+    //
+
 }

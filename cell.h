@@ -32,7 +32,7 @@ public:
 
     bool* get_notes();
 
-    void set_notes(bool* notes[9]);
+    void set_notes(bool* notes);
 
     void set_value(int value);
 

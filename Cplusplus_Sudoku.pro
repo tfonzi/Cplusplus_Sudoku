@@ -31,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
         cell.h \
+        main.h \
         mainwindow.h
 
 FORMS += \
