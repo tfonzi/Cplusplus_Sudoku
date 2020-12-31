@@ -1,6 +1,8 @@
 #ifndef CELL_H
 #define CELL_H
 
+#include <vector>
+
 class cell
 {
 
@@ -10,7 +12,7 @@ private:
 
     bool isStarting;
 
-    bool notes[9];
+    std::vector<bool> notes;
 
     int row;
     int col;
@@ -30,15 +32,11 @@ public:
 
     int get_value();
 
-    bool* get_notes();
+    std::vector<bool> get_notes();
 
-    void set_notes(bool* notes);
+    void set_notes(std::vector<bool> notes);
 
     void set_value(int value);
-
-    void set_start(int value, bool isStarting, int row, int col, int box);
-
-
 
 
 };

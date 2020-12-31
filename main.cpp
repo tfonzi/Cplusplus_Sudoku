@@ -64,8 +64,11 @@ int main(int argc, char *argv[])
     string sudoko_string = "004300209005009001070060043006002087190007400050083000600000105003508690042910300";
     //String is 81 long. each character represents value of sudoku. Zeros are blank.
 
+    //Initialize sudoku array data structure using string
     start(sudoko_string,sudoku_array);
 
+    //Passing sudoku_array data to the UI side of the application
+    w.pass_in_sudoku_array(sudoku_array);
 
     return a.exec();
 }
