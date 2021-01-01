@@ -5,19 +5,32 @@
 //Use of UI-scope variable is not prefered. Better implementation of this is a good goal for future
 vector<cell> MainWindow::passed_in_sudoku_array;
 
+vector<int> MainWindow::highlighted_cell;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     //Reserve data for passed in sudoku array
     passed_in_sudoku_array.reserve(81);
+    //Initializing highlighted cell
+    highlighted_cell.reserve(2);
+    highlighted_cell = {0,0};
+
     ui->setupUi(this);
+    ui->StartingSquareError->setVisible(false);
 }
 
 
+void MainWindow::change_highlight(int row, int col){
+
+    highlighted_cell[0] = row;
+    highlighted_cell[1] = col;
+
+}
 
 
-void MainWindow::update(vector<cell> sudoku_array)
+void MainWindow::update(vector<cell> sudoku_array, vector<int> highlighted_cell)
 {
 //Updates ui grid to match sudoku array
 
@@ -110,7 +123,8 @@ void MainWindow::update(vector<cell> sudoku_array)
     if(sudoku_array[79].get_value() == 0){ui->cell_Button_80->setText(" ");} else{ui->cell_Button_80->setText(QString::number(sudoku_array[79].get_value()));}
     if(sudoku_array[80].get_value() == 0){ui->cell_Button_81->setText(" ");} else{ui->cell_Button_81->setText(QString::number(sudoku_array[80].get_value()));}
 
-    //Setting Notes values
+
+    //Setting Note values
     vector<bool> notes_list;
     //Reserving 81 x 9 for notes
     notes_list.reserve(729);
@@ -123,6 +137,7 @@ void MainWindow::update(vector<cell> sudoku_array)
         notes.shrink_to_fit();
      }
 
+    //Changing UI for notes
     if(notes_list[0] == true){ui->note_1_cell_1->setVisible(true);}else{ui->note_1_cell_1->setVisible(false);}
     if(notes_list[1] == true){ui->note_2_cell_1->setVisible(true);}else{ui->note_2_cell_1->setVisible(false);}
     if(notes_list[2] == true){ui->note_3_cell_1->setVisible(true);}else{ui->note_3_cell_1->setVisible(false);}
@@ -857,6 +872,398 @@ void MainWindow::update(vector<cell> sudoku_array)
     notes_list.clear();
     notes_list.shrink_to_fit();
 
+
+    //Adding change in UI for highlighted square
+
+    //Removing previous highlight
+    ui->cell_Button_1->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_2->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_3->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_4->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_5->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_6->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_7->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_8->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_9->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_10->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_11->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_12->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_13->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_14->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_15->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_16->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_17->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_18->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_19->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_20->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_21->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_22->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_23->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_24->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_25->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_26->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_27->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_28->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_29->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_30->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_31->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_32->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_33->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_34->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_35->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_36->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_37->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_38->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_39->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_40->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_41->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_42->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_43->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_44->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_45->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_46->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_47->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_48->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_49->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_50->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_51->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_52->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_53->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_54->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_55->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_56->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_57->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_58->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_59->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_60->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_61->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_62->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_63->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_64->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_65->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_66->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_67->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_68->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_69->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_70->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_71->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_72->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_73->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_74->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_75->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_76->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_77->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_78->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_79->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_80->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_81->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+
+
+    //Adding new highlight in accordance to highlighted cell
+
+    int row = highlighted_cell[0];
+    int col = highlighted_cell[1];
+
+    switch (row){
+
+        case 0:
+        switch (col){
+            case 0:
+            ui->cell_Button_1->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_2->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_3->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_4->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_5->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_6->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_7->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_8->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_9->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
+
+        case 1:
+        switch (col){
+            case 0:
+            ui->cell_Button_10->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 1:
+            ui->cell_Button_11->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 2:
+            ui->cell_Button_12->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 3:
+            ui->cell_Button_13->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 4:
+            ui->cell_Button_14->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 5:
+            ui->cell_Button_15->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 6:
+            ui->cell_Button_16->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 7:
+            ui->cell_Button_17->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 8:
+            ui->cell_Button_18->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+        }
+        break;
+
+
+        case 2:
+        switch (col){
+            case 0:
+            ui->cell_Button_19->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 1:
+            ui->cell_Button_20->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 2:
+            ui->cell_Button_21->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 3:
+            ui->cell_Button_22->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 4:
+            ui->cell_Button_23->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 5:
+            ui->cell_Button_24->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 6:
+            ui->cell_Button_25->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 7:
+            ui->cell_Button_26->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+
+            case 8:
+            ui->cell_Button_27->setStyleSheet("background-color: rgb(255, 255, 127)");
+            break;
+        }
+        break;
+
+
+        case 3:
+        break;
+
+
+
+
+
+    }
+
+
+    //Changing Color of Starting Square Text
+
+    if(sudoku_array[0].get_isStarting()){ui->cell_Button_1->setStyleSheet("background-color: rgba(157, 187, 255,100))"
+);}
+    if(sudoku_array[1].get_isStarting()){ui->cell_Button_2->setStyleSheet("background-color: rgba(157, 187, 255,100))"
+);}
+    if(sudoku_array[2].get_isStarting()){ui->cell_Button_3->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[3].get_isStarting()){ui->cell_Button_4->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[4].get_isStarting()){ui->cell_Button_5->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[5].get_isStarting()){ui->cell_Button_6->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[6].get_isStarting()){ui->cell_Button_7->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[7].get_isStarting()){ui->cell_Button_8->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[8].get_isStarting()){ui->cell_Button_9->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[9].get_isStarting()){ui->cell_Button_10->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[10].get_isStarting()){ui->cell_Button_11->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[11].get_isStarting()){ui->cell_Button_12->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[12].get_isStarting()){ui->cell_Button_13->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[13].get_isStarting()){ui->cell_Button_14->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[14].get_isStarting()){ui->cell_Button_15->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[15].get_isStarting()){ui->cell_Button_16->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[16].get_isStarting()){ui->cell_Button_17->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[17].get_isStarting()){ui->cell_Button_18->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[18].get_isStarting()){ui->cell_Button_19->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[19].get_isStarting()){ui->cell_Button_20->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[20].get_isStarting()){ui->cell_Button_21->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[21].get_isStarting()){ui->cell_Button_22->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[22].get_isStarting()){ui->cell_Button_23->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[23].get_isStarting()){ui->cell_Button_24->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[24].get_isStarting()){ui->cell_Button_25->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[25].get_isStarting()){ui->cell_Button_26->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[26].get_isStarting()){ui->cell_Button_27->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[27].get_isStarting()){ui->cell_Button_28->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[28].get_isStarting()){ui->cell_Button_29->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[29].get_isStarting()){ui->cell_Button_30->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[30].get_isStarting()){ui->cell_Button_31->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[31].get_isStarting()){ui->cell_Button_32->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[32].get_isStarting()){ui->cell_Button_33->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[33].get_isStarting()){ui->cell_Button_34->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[34].get_isStarting()){ui->cell_Button_35->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[35].get_isStarting()){ui->cell_Button_36->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[36].get_isStarting()){ui->cell_Button_37->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[37].get_isStarting()){ui->cell_Button_38->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[38].get_isStarting()){ui->cell_Button_39->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[39].get_isStarting()){ui->cell_Button_40->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[40].get_isStarting()){ui->cell_Button_41->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[41].get_isStarting()){ui->cell_Button_42->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[42].get_isStarting()){ui->cell_Button_43->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[43].get_isStarting()){ui->cell_Button_44->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[44].get_isStarting()){ui->cell_Button_45->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[45].get_isStarting()){ui->cell_Button_46->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[46].get_isStarting()){ui->cell_Button_47->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[47].get_isStarting()){ui->cell_Button_48->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[48].get_isStarting()){ui->cell_Button_49->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[49].get_isStarting()){ui->cell_Button_50->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[50].get_isStarting()){ui->cell_Button_51->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[51].get_isStarting()){ui->cell_Button_52->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}if(sudoku_array[52].get_isStarting()){ui->cell_Button_53->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[53].get_isStarting()){ui->cell_Button_54->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[54].get_isStarting()){ui->cell_Button_55->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[55].get_isStarting()){ui->cell_Button_56->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[56].get_isStarting()){ui->cell_Button_57->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[57].get_isStarting()){ui->cell_Button_58->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[58].get_isStarting()){ui->cell_Button_59->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[59].get_isStarting()){ui->cell_Button_60->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[60].get_isStarting()){ui->cell_Button_61->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[61].get_isStarting()){ui->cell_Button_62->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[62].get_isStarting()){ui->cell_Button_63->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[63].get_isStarting()){ui->cell_Button_64->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[64].get_isStarting()){ui->cell_Button_65->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[65].get_isStarting()){ui->cell_Button_66->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[66].get_isStarting()){ui->cell_Button_67->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[67].get_isStarting()){ui->cell_Button_68->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[68].get_isStarting()){ui->cell_Button_69->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[69].get_isStarting()){ui->cell_Button_70->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[70].get_isStarting()){ui->cell_Button_71->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[71].get_isStarting()){ui->cell_Button_72->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[72].get_isStarting()){ui->cell_Button_73->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[73].get_isStarting()){ui->cell_Button_74->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[74].get_isStarting()){ui->cell_Button_75->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[75].get_isStarting()){ui->cell_Button_76->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[76].get_isStarting()){ui->cell_Button_77->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[77].get_isStarting()){ui->cell_Button_78->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[78].get_isStarting()){ui->cell_Button_79->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[79].get_isStarting()){ui->cell_Button_80->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+    if(sudoku_array[80].get_isStarting()){ui->cell_Button_81->setStyleSheet("background-color: rgba(157, 187, 255,100)"
+);}
+
+
+
 }
 
 
@@ -868,6 +1275,82 @@ void MainWindow::pass_in_sudoku_array(vector<cell> sudoku_array)
 }
 
 
+void MainWindow::on_ToggleNoteButton_clicked()
+{
+    int index = ui->userValueInput->value() - 1;
+
+    //Finding highlighted cell
+
+    for (int i = 0; i < 81; i++){
+
+        int row = passed_in_sudoku_array[i].get_row();
+        int col = passed_in_sudoku_array[i].get_col();
+
+        if((highlighted_cell[0] == row) && (highlighted_cell[1] == col)){
+            passed_in_sudoku_array[i].toggle_a_note(index);
+            MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+            break;
+        }
+    }
+}
+
+void MainWindow::on_eraseNotesButton_clicked()
+{
+    for (int i = 0; i < 81; i++){
+
+        int row = passed_in_sudoku_array[i].get_row();
+        int col = passed_in_sudoku_array[i].get_col();
+
+        if((highlighted_cell[0] == row) && (highlighted_cell[1] == col)){
+            vector<bool> zero_notes = {false,false,false,false,false,false,false,false,false};
+            passed_in_sudoku_array[i].set_notes(zero_notes);
+            zero_notes.clear();
+            zero_notes.shrink_to_fit();
+            MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+            break;
+        }
+    }
+
+}
+
+void MainWindow::on_changeValueButton_clicked()
+{
+    int value = ui->userValueInput->value();
+
+    //INSERT FUNCTION THAT CHECKS VALIDITY OF MOVE
+
+
+
+    //Finding highlighted cell
+
+    for (int i = 0; i < 81; i++){
+        int row = passed_in_sudoku_array[i].get_row();
+        int col = passed_in_sudoku_array[i].get_col();
+
+        if((highlighted_cell[0] == row) && (highlighted_cell[1] == col)){
+            passed_in_sudoku_array[i].set_value(value);
+            MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+            break;
+        }
+    }
+}
+
+void MainWindow::on_eraseButton_clicked()
+{
+    for (int i = 0; i < 81; i++){
+        int row = passed_in_sudoku_array[i].get_row();
+        int col = passed_in_sudoku_array[i].get_col();
+
+        if((highlighted_cell[0] == row) && (highlighted_cell[1] == col)){
+            passed_in_sudoku_array[i].set_value(0);
+            MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+            break;
+        }
+    }
+}
+
+
+
 
 MainWindow::~MainWindow()
 {
@@ -876,5 +1359,980 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_updateButton_clicked()
 {
-    MainWindow::update(passed_in_sudoku_array);
+    MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+}
+
+void MainWindow::on_cell_Button_1_clicked()
+{
+    if(passed_in_sudoku_array[0].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+
+    }
+}
+
+void MainWindow::on_cell_Button_2_clicked()
+{
+    if(passed_in_sudoku_array[1].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_3_clicked()
+{
+    if(passed_in_sudoku_array[2].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_4_clicked()
+{
+    if(passed_in_sudoku_array[3].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_5_clicked()
+{
+    if(passed_in_sudoku_array[4].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_6_clicked()
+{
+    if(passed_in_sudoku_array[5].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_7_clicked()
+{
+    if(passed_in_sudoku_array[6].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_8_clicked()
+{
+    if(passed_in_sudoku_array[7].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_9_clicked()
+{
+    if(passed_in_sudoku_array[8].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(0,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+
+void MainWindow::on_cell_Button_10_clicked()
+{
+    if(passed_in_sudoku_array[9].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_11_clicked()
+{
+    if(passed_in_sudoku_array[10].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_12_clicked()
+{
+    if(passed_in_sudoku_array[11].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_13_clicked()
+{
+    if(passed_in_sudoku_array[12].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_14_clicked()
+{
+    if(passed_in_sudoku_array[13].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_15_clicked()
+{
+    if(passed_in_sudoku_array[14].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_16_clicked()
+{
+    if(passed_in_sudoku_array[15].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_17_clicked()
+{
+    if(passed_in_sudoku_array[16].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_18_clicked()
+{
+    if(passed_in_sudoku_array[17].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(1,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_19_clicked()
+{
+    if(passed_in_sudoku_array[18].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_20_clicked()
+{
+    if(passed_in_sudoku_array[19].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_21_clicked()
+{
+    if(passed_in_sudoku_array[20].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_22_clicked()
+{
+    if(passed_in_sudoku_array[21].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_23_clicked()
+{
+    if(passed_in_sudoku_array[22].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_24_clicked()
+{
+    if(passed_in_sudoku_array[23].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_25_clicked()
+{
+    if(passed_in_sudoku_array[24].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_26_clicked()
+{
+    if(passed_in_sudoku_array[25].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_27_clicked()
+{
+    if(passed_in_sudoku_array[26].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(2,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_28_clicked()
+{
+    if(passed_in_sudoku_array[27].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_29_clicked()
+{
+    if(passed_in_sudoku_array[28].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_30_clicked()
+{
+    if(passed_in_sudoku_array[29].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_31_clicked()
+{
+    if(passed_in_sudoku_array[30].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_32_clicked()
+{
+    if(passed_in_sudoku_array[31].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_33_clicked()
+{
+    if(passed_in_sudoku_array[32].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_34_clicked()
+{
+    if(passed_in_sudoku_array[33].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_35_clicked()
+{
+    if(passed_in_sudoku_array[34].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_36_clicked()
+{
+    if(passed_in_sudoku_array[35].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(3,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_37_clicked()
+{
+    if(passed_in_sudoku_array[36].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_38_clicked()
+{
+    if(passed_in_sudoku_array[37].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_39_clicked()
+{
+    if(passed_in_sudoku_array[38].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_40_clicked()
+{
+    if(passed_in_sudoku_array[39].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_41_clicked()
+{
+    if(passed_in_sudoku_array[40].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_42_clicked()
+{
+    if(passed_in_sudoku_array[41].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_43_clicked()
+{
+    if(passed_in_sudoku_array[42].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_44_clicked()
+{
+    if(passed_in_sudoku_array[43].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_45_clicked()
+{
+    if(passed_in_sudoku_array[44].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(4,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_46_clicked()
+{
+    if(passed_in_sudoku_array[45].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_47_clicked()
+{
+    if(passed_in_sudoku_array[46].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_48_clicked()
+{
+    if(passed_in_sudoku_array[47].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_49_clicked()
+{
+    if(passed_in_sudoku_array[48].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_50_clicked()
+{
+    if(passed_in_sudoku_array[49].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_51_clicked()
+{
+    if(passed_in_sudoku_array[50].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_52_clicked()
+{
+    if(passed_in_sudoku_array[51].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_53_clicked()
+{
+    if(passed_in_sudoku_array[52].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_54_clicked()
+{
+    if(passed_in_sudoku_array[53].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(5,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_55_clicked()
+{
+    if(passed_in_sudoku_array[54].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_56_clicked()
+{
+    if(passed_in_sudoku_array[55].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_57_clicked()
+{
+    if(passed_in_sudoku_array[56].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_58_clicked()
+{
+    if(passed_in_sudoku_array[57].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_59_clicked()
+{
+    if(passed_in_sudoku_array[58].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_60_clicked()
+{
+    if(passed_in_sudoku_array[59].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_61_clicked()
+{
+    if(passed_in_sudoku_array[60].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_62_clicked()
+{
+    if(passed_in_sudoku_array[61].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_63_clicked()
+{
+    if(passed_in_sudoku_array[62].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(6,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_64_clicked()
+{
+    if(passed_in_sudoku_array[63].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_65_clicked()
+{
+    if(passed_in_sudoku_array[64].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_66_clicked()
+{
+    if(passed_in_sudoku_array[65].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_67_clicked()
+{
+    if(passed_in_sudoku_array[66].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_68_clicked()
+{
+    if(passed_in_sudoku_array[67].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_69_clicked()
+{
+    if(passed_in_sudoku_array[68].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_70_clicked()
+{
+    if(passed_in_sudoku_array[69].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_71_clicked()
+{
+    if(passed_in_sudoku_array[70].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_72_clicked()
+{
+    if(passed_in_sudoku_array[71].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(7,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_73_clicked()
+{
+    if(passed_in_sudoku_array[72].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,0);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_74_clicked()
+{
+    if(passed_in_sudoku_array[73].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,1);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_75_clicked()
+{
+    if(passed_in_sudoku_array[74].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,2);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_76_clicked()
+{
+    if(passed_in_sudoku_array[75].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,3);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_77_clicked()
+{
+    if(passed_in_sudoku_array[76].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,4);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_78_clicked()
+{
+    if(passed_in_sudoku_array[77].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,5);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_79_clicked()
+{
+    if(passed_in_sudoku_array[78].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,6);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_80_clicked()
+{
+    if(passed_in_sudoku_array[79].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,7);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
+}
+
+void MainWindow::on_cell_Button_81_clicked()
+{
+    if(passed_in_sudoku_array[80].get_isStarting()){
+        ui->StartingSquareError->setVisible(true);
+    }
+    else{
+        ui->StartingSquareError->setVisible(false);
+        MainWindow::change_highlight(8,8);
+        MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    }
 }

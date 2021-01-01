@@ -41,6 +41,12 @@ int cell::get_value()
     return this->value;
 }
 
+bool cell::get_isStarting()
+{
+    return this->isStarting;
+}
+
+
 std::vector<bool> cell::get_notes(){
     return this->notes;
 }
@@ -48,6 +54,11 @@ std::vector<bool> cell::get_notes(){
 void cell::set_notes(std::vector<bool> notes)
 {
     this->notes = notes;
+}
+
+void cell::toggle_a_note(int index)
+{
+    this->notes[index] = !(this->notes[index]);
 }
 
 void cell::set_value(int value){

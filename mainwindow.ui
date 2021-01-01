@@ -65,7 +65,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -293,7 +295,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -515,7 +519,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -756,7 +762,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -978,7 +986,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -1200,7 +1210,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -1441,7 +1453,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -1663,7 +1677,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -1885,7 +1901,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(218, 218, 218, 100);</string>
+      <string notr="true">background-color: rgba(218, 218, 218, 100);
+color: rgb(0, 0, 0);
+</string>
      </property>
      <property name="text">
       <string>0</string>
@@ -18087,14 +18105,120 @@
    <widget class="QPushButton" name="updateButton">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>650</y>
+      <x>90</x>
+      <y>600</y>
       <width>93</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
      <string>Update</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="StartingSquareError">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>580</y>
+      <width>301</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>You cannot highlight a starting square.</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="userValueInput">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>640</y>
+      <width>111</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="wrapping">
+     <bool>false</bool>
+    </property>
+    <property name="frame">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+    <property name="buttonSymbols">
+     <enum>QAbstractSpinBox::UpDownArrows</enum>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>9</number>
+    </property>
+    <property name="stepType">
+     <enum>QAbstractSpinBox::DefaultStepType</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ToggleNoteButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>620</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Toggle Note</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="changeValueButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>690</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Write it in!</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="eraseButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>720</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Erase</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="eraseNotesButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>650</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Erase Notes</string>
     </property>
    </widget>
    <zorder>cell_1</zorder>
@@ -18183,6 +18307,12 @@
    <zorder>line_2</zorder>
    <zorder>line_3</zorder>
    <zorder>updateButton</zorder>
+   <zorder>StartingSquareError</zorder>
+   <zorder>userValueInput</zorder>
+   <zorder>ToggleNoteButton</zorder>
+   <zorder>changeValueButton</zorder>
+   <zorder>eraseButton</zorder>
+   <zorder>eraseNotesButton</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

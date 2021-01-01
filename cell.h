@@ -36,7 +36,11 @@ public:
 
     void set_notes(std::vector<bool> notes);
 
+    void toggle_a_note(int index);
+
     void set_value(int value);
+
+    bool get_isStarting();
 
 
 };
