@@ -1009,39 +1009,39 @@ void MainWindow::update(vector<cell> sudoku_array, vector<int> highlighted_cell)
         case 1:
         switch (col){
             case 0:
-            ui->cell_Button_10->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_10->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 1:
-            ui->cell_Button_11->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_11->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 2:
-            ui->cell_Button_12->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_12->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 3:
-            ui->cell_Button_13->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_13->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 4:
-            ui->cell_Button_14->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_14->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 5:
-            ui->cell_Button_15->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_15->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 6:
-            ui->cell_Button_16->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_16->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 7:
-            ui->cell_Button_17->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_17->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 8:
-            ui->cell_Button_18->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_18->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
         }
         break;
@@ -1050,50 +1050,283 @@ void MainWindow::update(vector<cell> sudoku_array, vector<int> highlighted_cell)
         case 2:
         switch (col){
             case 0:
-            ui->cell_Button_19->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_19->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 1:
-            ui->cell_Button_20->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_20->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 2:
-            ui->cell_Button_21->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_21->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 3:
-            ui->cell_Button_22->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_22->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 4:
-            ui->cell_Button_23->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_23->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 5:
-            ui->cell_Button_24->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_24->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 6:
-            ui->cell_Button_25->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_25->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 7:
-            ui->cell_Button_26->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_26->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
 
             case 8:
-            ui->cell_Button_27->setStyleSheet("background-color: rgb(255, 255, 127)");
+            ui->cell_Button_27->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
             break;
         }
         break;
 
 
         case 3:
+        switch (col){
+            case 0:
+            ui->cell_Button_28->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_29->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_30->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_31->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_32->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_33->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_34->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_35->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_36->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
         break;
 
+        case 4:
+        switch (col){
+            case 0:
+            ui->cell_Button_37->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
 
+            case 1:
+            ui->cell_Button_38->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
 
+            case 2:
+            ui->cell_Button_39->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
 
+            case 3:
+            ui->cell_Button_40->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_41->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_42->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_43->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_44->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_45->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
+
+        case 5:
+        switch (col){
+            case 0:
+            ui->cell_Button_46->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_47->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_48->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_49->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_50->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_51->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_52->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_53->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_54->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
+
+        case 6:
+        switch (col){
+            case 0:
+            ui->cell_Button_55->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_56->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_57->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_58->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_59->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_60->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_61->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_62->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_63->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
+
+        case 7:
+        switch (col){
+            case 0:
+            ui->cell_Button_64->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_65->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_66->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_67->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_68->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_69->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_70->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_71->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_72->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
+
+        case 8:
+        switch (col){
+            case 0:
+            ui->cell_Button_73->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 1:
+            ui->cell_Button_74->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 2:
+            ui->cell_Button_75->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 3:
+            ui->cell_Button_76->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 4:
+            ui->cell_Button_77->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 5:
+            ui->cell_Button_78->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 6:
+            ui->cell_Button_79->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 7:
+            ui->cell_Button_80->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+
+            case 8:
+            ui->cell_Button_81->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            break;
+        }
+        break;
 
     }
 
