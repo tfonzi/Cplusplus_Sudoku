@@ -1,6 +1,4 @@
-#include "mainwindow.h"
 #include "main.h"
-#include "sudoku_selector.h"
 #include <QApplication>
 
 
