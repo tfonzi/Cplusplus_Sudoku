@@ -27,15 +27,18 @@ CONFIG += c++11
 SOURCES += \
         cell.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        sudoku_selector.cpp
 
 HEADERS += \
         cell.h \
         main.h \
-        mainwindow.h
+        mainwindow.h \
+        sudoku_selector.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        sudoku_selector.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

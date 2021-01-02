@@ -18102,23 +18102,10 @@ color: rgb(0, 0, 0);
     <zorder>gridWidget_81</zorder>
     <zorder>cell_Button_81</zorder>
    </widget>
-   <widget class="QPushButton" name="updateButton">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>600</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Update</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="StartingSquareError">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>380</x>
       <y>580</y>
       <width>301</width>
       <height>41</height>
@@ -18154,7 +18141,7 @@ color: rgb(0, 0, 0);
      <bool>false</bool>
     </property>
     <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     <set>Qt::AlignCenter</set>
     </property>
     <property name="buttonSymbols">
      <enum>QAbstractSpinBox::UpDownArrows</enum>
@@ -18192,7 +18179,7 @@ color: rgb(0, 0, 0);
      </rect>
     </property>
     <property name="text">
-     <string>Write it in!</string>
+     <string>Fill Out Cell</string>
     </property>
    </widget>
    <widget class="QPushButton" name="eraseButton">
@@ -18205,7 +18192,7 @@ color: rgb(0, 0, 0);
      </rect>
     </property>
     <property name="text">
-     <string>Erase</string>
+     <string>Erase Cell</string>
     </property>
    </widget>
    <widget class="QPushButton" name="eraseNotesButton">
@@ -18219,6 +18206,37 @@ color: rgb(0, 0, 0);
     </property>
     <property name="text">
      <string>Erase Notes</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="InvalidMoveError">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>580</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Invalid Move. Check Row, Col, or Box values.</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mainMenuButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>780</y>
+      <width>131</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Return to Main Menu</string>
     </property>
    </widget>
    <zorder>cell_1</zorder>
@@ -18306,40 +18324,15 @@ color: rgb(0, 0, 0);
    <zorder>line_4</zorder>
    <zorder>line_2</zorder>
    <zorder>line_3</zorder>
-   <zorder>updateButton</zorder>
    <zorder>StartingSquareError</zorder>
    <zorder>userValueInput</zorder>
    <zorder>ToggleNoteButton</zorder>
    <zorder>changeValueButton</zorder>
    <zorder>eraseButton</zorder>
    <zorder>eraseNotesButton</zorder>
+   <zorder>InvalidMoveError</zorder>
+   <zorder>mainMenuButton</zorder>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>721</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuMenu">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionFile"/>
-   </widget>
-   <addaction name="menuMenu"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionFile">
    <property name="text">
     <string>File</string>

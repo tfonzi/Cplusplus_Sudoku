@@ -18,8 +18,93 @@ MainWindow::MainWindow(QWidget *parent) :
     highlighted_cell = {0,0};
 
     ui->setupUi(this);
-    ui->StartingSquareError->setVisible(false);
+
 }
+
+void MainWindow::start(){
+
+
+
+    //This nested loop is for resetting the highlighted cell if it {0,0} and subsequent cells are starting squares
+    int index = 0;
+    bool found = false;
+    for(int i = 0; i < 8; i++){
+        if(found){
+            break;
+        }
+        for(int j = 0; j < 8; j++){
+
+            if(!MainWindow::passed_in_sudoku_array[index].get_isStarting()){
+                MainWindow::highlighted_cell = {i,j};
+                found = true;
+                break;
+            }
+
+            index++;
+        }
+
+    }
+
+
+    MainWindow::update(passed_in_sudoku_array, highlighted_cell);
+    ui->StartingSquareError->setVisible(false);
+    ui->InvalidMoveError->setVisible(false);
+}
+
+bool MainWindow::check_valid_move(int value){
+    //Checks highlighted square with others in same row, col, and box
+    //if the values == eachother, then the move is invalid
+
+    //box chart is essentially a dictionary. reads [row,col]
+    map<pair<int,int>, int> box_chart;
+    box_chart[make_pair(0,0)] = 0;
+    box_chart[make_pair(0,1)] = 1;
+    box_chart[make_pair(0,2)] = 2;
+    box_chart[make_pair(1,0)] = 3;
+    box_chart[make_pair(1,1)] = 4;
+    box_chart[make_pair(1,2)] = 5;
+    box_chart[make_pair(2,0)] = 6;
+    box_chart[make_pair(2,1)] = 7;
+    box_chart[make_pair(2,2)] = 8;
+
+    int row = highlighted_cell[0];
+    int col = highlighted_cell[1];
+    int row_region = row / 3;
+    int col_region = col / 3;
+    int box = box_chart[make_pair(row_region,col_region)];
+
+
+    //Check if cells with same row, col, or box match in value
+    for(int i = 0; i < 81; i++){
+
+        if(row == passed_in_sudoku_array[i].get_row()){
+            if(value == passed_in_sudoku_array[i].get_value()){
+                ui->StartingSquareError->setVisible(false);
+                ui->InvalidMoveError->setVisible(true);
+                return false;
+            }
+        }
+        else if(col == passed_in_sudoku_array[i].get_col()){
+            if(value == passed_in_sudoku_array[i].get_value()){
+                ui->StartingSquareError->setVisible(false);
+                ui->InvalidMoveError->setVisible(true);
+                return false;
+            }
+        }
+        else if(box == passed_in_sudoku_array[i].get_box()){
+            if(value == passed_in_sudoku_array[i].get_value()){
+                ui->StartingSquareError->setVisible(false);
+                ui->InvalidMoveError->setVisible(true);
+                return false;
+            }
+        }
+        else{
+            continue;
+        }
+    }
+    return true;
+}
+
 
 
 void MainWindow::change_highlight(int row, int col){
@@ -1333,9 +1418,9 @@ void MainWindow::update(vector<cell> sudoku_array, vector<int> highlighted_cell)
 
     //Changing Color of Starting Square Text
 
-    if(sudoku_array[0].get_isStarting()){ui->cell_Button_1->setStyleSheet("background-color: rgba(157, 187, 255,100))"
+    if(sudoku_array[0].get_isStarting()){ui->cell_Button_1->setStyleSheet("background-color: rgba(157, 187, 255,100)"
 );}
-    if(sudoku_array[1].get_isStarting()){ui->cell_Button_2->setStyleSheet("background-color: rgba(157, 187, 255,100))"
+    if(sudoku_array[1].get_isStarting()){ui->cell_Button_2->setStyleSheet("background-color: rgba(157, 187, 255,100)"
 );}
     if(sudoku_array[2].get_isStarting()){ui->cell_Button_3->setStyleSheet("background-color: rgba(157, 187, 255,100)"
 );}
@@ -1550,9 +1635,12 @@ void MainWindow::on_changeValueButton_clicked()
 {
     int value = ui->userValueInput->value();
 
-    //INSERT FUNCTION THAT CHECKS VALIDITY OF MOVE
+    //Checking if value is valid
 
-
+    if(!check_valid_move(value)){
+        //return void, no value change
+        return;
+    }
 
     //Finding highlighted cell
 
@@ -1590,13 +1678,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_updateButton_clicked()
-{
-    MainWindow::update(passed_in_sudoku_array, highlighted_cell);
-}
-
 void MainWindow::on_cell_Button_1_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[0].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
 
@@ -1611,6 +1695,7 @@ void MainWindow::on_cell_Button_1_clicked()
 
 void MainWindow::on_cell_Button_2_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[1].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1623,6 +1708,7 @@ void MainWindow::on_cell_Button_2_clicked()
 
 void MainWindow::on_cell_Button_3_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[2].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1635,6 +1721,7 @@ void MainWindow::on_cell_Button_3_clicked()
 
 void MainWindow::on_cell_Button_4_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[3].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1647,6 +1734,7 @@ void MainWindow::on_cell_Button_4_clicked()
 
 void MainWindow::on_cell_Button_5_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[4].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1659,6 +1747,7 @@ void MainWindow::on_cell_Button_5_clicked()
 
 void MainWindow::on_cell_Button_6_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[5].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1671,6 +1760,7 @@ void MainWindow::on_cell_Button_6_clicked()
 
 void MainWindow::on_cell_Button_7_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[6].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1683,6 +1773,7 @@ void MainWindow::on_cell_Button_7_clicked()
 
 void MainWindow::on_cell_Button_8_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[7].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1695,6 +1786,7 @@ void MainWindow::on_cell_Button_8_clicked()
 
 void MainWindow::on_cell_Button_9_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[8].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1708,6 +1800,7 @@ void MainWindow::on_cell_Button_9_clicked()
 
 void MainWindow::on_cell_Button_10_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[9].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1720,6 +1813,7 @@ void MainWindow::on_cell_Button_10_clicked()
 
 void MainWindow::on_cell_Button_11_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[10].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1732,6 +1826,7 @@ void MainWindow::on_cell_Button_11_clicked()
 
 void MainWindow::on_cell_Button_12_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[11].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1744,6 +1839,7 @@ void MainWindow::on_cell_Button_12_clicked()
 
 void MainWindow::on_cell_Button_13_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[12].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1756,6 +1852,7 @@ void MainWindow::on_cell_Button_13_clicked()
 
 void MainWindow::on_cell_Button_14_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[13].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1768,6 +1865,7 @@ void MainWindow::on_cell_Button_14_clicked()
 
 void MainWindow::on_cell_Button_15_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[14].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1780,6 +1878,7 @@ void MainWindow::on_cell_Button_15_clicked()
 
 void MainWindow::on_cell_Button_16_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[15].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1792,6 +1891,7 @@ void MainWindow::on_cell_Button_16_clicked()
 
 void MainWindow::on_cell_Button_17_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[16].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1804,6 +1904,7 @@ void MainWindow::on_cell_Button_17_clicked()
 
 void MainWindow::on_cell_Button_18_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[17].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1816,6 +1917,7 @@ void MainWindow::on_cell_Button_18_clicked()
 
 void MainWindow::on_cell_Button_19_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[18].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1828,6 +1930,7 @@ void MainWindow::on_cell_Button_19_clicked()
 
 void MainWindow::on_cell_Button_20_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[19].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1840,6 +1943,7 @@ void MainWindow::on_cell_Button_20_clicked()
 
 void MainWindow::on_cell_Button_21_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[20].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1852,6 +1956,7 @@ void MainWindow::on_cell_Button_21_clicked()
 
 void MainWindow::on_cell_Button_22_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[21].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1864,6 +1969,7 @@ void MainWindow::on_cell_Button_22_clicked()
 
 void MainWindow::on_cell_Button_23_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[22].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1876,6 +1982,7 @@ void MainWindow::on_cell_Button_23_clicked()
 
 void MainWindow::on_cell_Button_24_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[23].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1888,6 +1995,7 @@ void MainWindow::on_cell_Button_24_clicked()
 
 void MainWindow::on_cell_Button_25_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[24].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1900,6 +2008,7 @@ void MainWindow::on_cell_Button_25_clicked()
 
 void MainWindow::on_cell_Button_26_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[25].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1912,6 +2021,7 @@ void MainWindow::on_cell_Button_26_clicked()
 
 void MainWindow::on_cell_Button_27_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[26].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1924,6 +2034,7 @@ void MainWindow::on_cell_Button_27_clicked()
 
 void MainWindow::on_cell_Button_28_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[27].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1936,6 +2047,7 @@ void MainWindow::on_cell_Button_28_clicked()
 
 void MainWindow::on_cell_Button_29_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[28].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1948,6 +2060,7 @@ void MainWindow::on_cell_Button_29_clicked()
 
 void MainWindow::on_cell_Button_30_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[29].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1960,6 +2073,7 @@ void MainWindow::on_cell_Button_30_clicked()
 
 void MainWindow::on_cell_Button_31_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[30].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1972,6 +2086,7 @@ void MainWindow::on_cell_Button_31_clicked()
 
 void MainWindow::on_cell_Button_32_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[31].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1984,6 +2099,7 @@ void MainWindow::on_cell_Button_32_clicked()
 
 void MainWindow::on_cell_Button_33_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[32].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -1996,6 +2112,7 @@ void MainWindow::on_cell_Button_33_clicked()
 
 void MainWindow::on_cell_Button_34_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[33].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2008,6 +2125,7 @@ void MainWindow::on_cell_Button_34_clicked()
 
 void MainWindow::on_cell_Button_35_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[34].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2020,6 +2138,7 @@ void MainWindow::on_cell_Button_35_clicked()
 
 void MainWindow::on_cell_Button_36_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[35].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2032,6 +2151,7 @@ void MainWindow::on_cell_Button_36_clicked()
 
 void MainWindow::on_cell_Button_37_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[36].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2044,6 +2164,7 @@ void MainWindow::on_cell_Button_37_clicked()
 
 void MainWindow::on_cell_Button_38_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[37].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2056,6 +2177,7 @@ void MainWindow::on_cell_Button_38_clicked()
 
 void MainWindow::on_cell_Button_39_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[38].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2068,6 +2190,7 @@ void MainWindow::on_cell_Button_39_clicked()
 
 void MainWindow::on_cell_Button_40_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[39].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2080,6 +2203,7 @@ void MainWindow::on_cell_Button_40_clicked()
 
 void MainWindow::on_cell_Button_41_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[40].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2092,6 +2216,7 @@ void MainWindow::on_cell_Button_41_clicked()
 
 void MainWindow::on_cell_Button_42_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[41].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2104,6 +2229,7 @@ void MainWindow::on_cell_Button_42_clicked()
 
 void MainWindow::on_cell_Button_43_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[42].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2116,6 +2242,7 @@ void MainWindow::on_cell_Button_43_clicked()
 
 void MainWindow::on_cell_Button_44_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[43].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2128,6 +2255,7 @@ void MainWindow::on_cell_Button_44_clicked()
 
 void MainWindow::on_cell_Button_45_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[44].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2140,6 +2268,7 @@ void MainWindow::on_cell_Button_45_clicked()
 
 void MainWindow::on_cell_Button_46_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[45].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2152,6 +2281,7 @@ void MainWindow::on_cell_Button_46_clicked()
 
 void MainWindow::on_cell_Button_47_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[46].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2164,6 +2294,7 @@ void MainWindow::on_cell_Button_47_clicked()
 
 void MainWindow::on_cell_Button_48_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[47].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2176,6 +2307,7 @@ void MainWindow::on_cell_Button_48_clicked()
 
 void MainWindow::on_cell_Button_49_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[48].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2188,6 +2320,7 @@ void MainWindow::on_cell_Button_49_clicked()
 
 void MainWindow::on_cell_Button_50_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[49].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2200,6 +2333,7 @@ void MainWindow::on_cell_Button_50_clicked()
 
 void MainWindow::on_cell_Button_51_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[50].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2212,6 +2346,7 @@ void MainWindow::on_cell_Button_51_clicked()
 
 void MainWindow::on_cell_Button_52_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[51].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2224,6 +2359,7 @@ void MainWindow::on_cell_Button_52_clicked()
 
 void MainWindow::on_cell_Button_53_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[52].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2236,6 +2372,7 @@ void MainWindow::on_cell_Button_53_clicked()
 
 void MainWindow::on_cell_Button_54_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[53].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2248,6 +2385,7 @@ void MainWindow::on_cell_Button_54_clicked()
 
 void MainWindow::on_cell_Button_55_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[54].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2260,6 +2398,7 @@ void MainWindow::on_cell_Button_55_clicked()
 
 void MainWindow::on_cell_Button_56_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[55].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2272,6 +2411,7 @@ void MainWindow::on_cell_Button_56_clicked()
 
 void MainWindow::on_cell_Button_57_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[56].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2284,6 +2424,7 @@ void MainWindow::on_cell_Button_57_clicked()
 
 void MainWindow::on_cell_Button_58_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[57].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2296,6 +2437,7 @@ void MainWindow::on_cell_Button_58_clicked()
 
 void MainWindow::on_cell_Button_59_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[58].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2308,6 +2450,7 @@ void MainWindow::on_cell_Button_59_clicked()
 
 void MainWindow::on_cell_Button_60_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[59].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2320,6 +2463,7 @@ void MainWindow::on_cell_Button_60_clicked()
 
 void MainWindow::on_cell_Button_61_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[60].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2332,6 +2476,7 @@ void MainWindow::on_cell_Button_61_clicked()
 
 void MainWindow::on_cell_Button_62_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[61].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2344,6 +2489,7 @@ void MainWindow::on_cell_Button_62_clicked()
 
 void MainWindow::on_cell_Button_63_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[62].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2356,6 +2502,7 @@ void MainWindow::on_cell_Button_63_clicked()
 
 void MainWindow::on_cell_Button_64_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[63].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2368,6 +2515,7 @@ void MainWindow::on_cell_Button_64_clicked()
 
 void MainWindow::on_cell_Button_65_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[64].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2380,6 +2528,7 @@ void MainWindow::on_cell_Button_65_clicked()
 
 void MainWindow::on_cell_Button_66_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[65].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2392,6 +2541,7 @@ void MainWindow::on_cell_Button_66_clicked()
 
 void MainWindow::on_cell_Button_67_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[66].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2404,6 +2554,7 @@ void MainWindow::on_cell_Button_67_clicked()
 
 void MainWindow::on_cell_Button_68_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[67].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2416,6 +2567,7 @@ void MainWindow::on_cell_Button_68_clicked()
 
 void MainWindow::on_cell_Button_69_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[68].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2428,6 +2580,7 @@ void MainWindow::on_cell_Button_69_clicked()
 
 void MainWindow::on_cell_Button_70_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[69].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2440,6 +2593,7 @@ void MainWindow::on_cell_Button_70_clicked()
 
 void MainWindow::on_cell_Button_71_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[70].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2452,6 +2606,7 @@ void MainWindow::on_cell_Button_71_clicked()
 
 void MainWindow::on_cell_Button_72_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[71].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2464,6 +2619,7 @@ void MainWindow::on_cell_Button_72_clicked()
 
 void MainWindow::on_cell_Button_73_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[72].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2476,6 +2632,7 @@ void MainWindow::on_cell_Button_73_clicked()
 
 void MainWindow::on_cell_Button_74_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[73].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2488,6 +2645,7 @@ void MainWindow::on_cell_Button_74_clicked()
 
 void MainWindow::on_cell_Button_75_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[74].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2500,6 +2658,7 @@ void MainWindow::on_cell_Button_75_clicked()
 
 void MainWindow::on_cell_Button_76_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[75].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2512,6 +2671,7 @@ void MainWindow::on_cell_Button_76_clicked()
 
 void MainWindow::on_cell_Button_77_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[76].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2524,6 +2684,7 @@ void MainWindow::on_cell_Button_77_clicked()
 
 void MainWindow::on_cell_Button_78_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[77].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2536,6 +2697,7 @@ void MainWindow::on_cell_Button_78_clicked()
 
 void MainWindow::on_cell_Button_79_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[78].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2548,6 +2710,7 @@ void MainWindow::on_cell_Button_79_clicked()
 
 void MainWindow::on_cell_Button_80_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[79].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2560,6 +2723,7 @@ void MainWindow::on_cell_Button_80_clicked()
 
 void MainWindow::on_cell_Button_81_clicked()
 {
+    ui->InvalidMoveError->setVisible(false);
     if(passed_in_sudoku_array[80].get_isStarting()){
         ui->StartingSquareError->setVisible(true);
     }
@@ -2568,4 +2732,11 @@ void MainWindow::on_cell_Button_81_clicked()
         MainWindow::change_highlight(8,8);
         MainWindow::update(passed_in_sudoku_array, highlighted_cell);
     }
+}
+
+
+
+void MainWindow::on_mainMenuButton_clicked()
+{
+
 }

@@ -25,6 +25,9 @@ public:
     void pass_in_sudoku_array(vector<cell> sudoku_array);
     //passes in value for sudoku_array
 
+    //Initializes first game update
+    void start();
+
     static vector<cell> passed_in_sudoku_array;
 
     static vector<int> highlighted_cell;
@@ -32,15 +35,12 @@ public:
     void change_highlight(int row, int col);
 
 
+    bool check_valid_move(int value);
 
 
 
 
 private slots:
-
-
-
-    void on_updateButton_clicked();
 
     void on_cell_Button_1_clicked();
 
@@ -212,13 +212,7 @@ private slots:
 
     void on_cell_Button_81_clicked();
 
-
-
-
-
-
-
-
+    void on_mainMenuButton_clicked();
 
 private:
     Ui::MainWindow *ui;
