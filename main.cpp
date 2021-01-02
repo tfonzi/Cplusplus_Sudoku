@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    sudoku_selector s;
-    s.show();
+    sudoku_selector mainMenu;
+    mainMenu.show();
 
     return a.exec();
 }

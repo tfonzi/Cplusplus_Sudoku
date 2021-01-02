@@ -5,7 +5,7 @@
 #include <vector>
 #include <string.h>
 #include <cell.h>
-#include "mainwindow.h"
+#include "sudoku_game.h"
 
 namespace Ui {
 class sudoku_selector;
@@ -40,7 +40,7 @@ private slots:
 
 private:
     Ui::sudoku_selector *ui;
-    MainWindow *w;
+    sudoku_game *game_window;
 };
 
 #endif // SUDOKU_SELECTOR_H

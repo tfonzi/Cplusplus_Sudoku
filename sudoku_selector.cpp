@@ -17,69 +17,79 @@ sudoku_selector::sudoku_selector(QWidget *parent) :
     sudoku_selector::sudokus = {"004300209005009001070060043006002087190007400050083000600000105003508690042910300","040100050107003960520008000000000017000906800803050620090060543600080700250097100","600120384008459072000006005000264030070080006940003000310000050089700000502000190","497200000100400005000016098620300040300900000001072600002005870000600004530097061","005910308009403060027500100030000201000820007006007004000080000640150700890000420"};
     sudoku_selector::selection = 0;
     ui->setupUi(this);
-    update();
+    update_ui();
 
     //Creating sudoku game instance window
-    w = new MainWindow();
+    game_window = new sudoku_game();
 
     //connecting slot for sudoku game window
-    connect(w, &MainWindow::mainMenu, this, &sudoku_selector::show);
+    connect(game_window, &sudoku_game::mainMenu, this, &sudoku_selector::show);
 
 }
 
-void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku_array)
+
+
+
+
+
+sudoku_selector::~sudoku_selector()
 {
+    delete ui;
+}
 
-    int row = -1; //Because it will iterate when i == 0
-    int col = 0;
-    int box = 0;
+void sudoku_selector::on_rightButton_clicked()
+{
+    sudoku_selector::selection++;
 
-    //box chart is essentially a dictionary. reads [row,col]
-    map<pair<int,int>, int> box_chart;
-    box_chart[make_pair(0,0)] = 0;
-    box_chart[make_pair(0,1)] = 1;
-    box_chart[make_pair(0,2)] = 2;
-    box_chart[make_pair(1,0)] = 3;
-    box_chart[make_pair(1,1)] = 4;
-    box_chart[make_pair(1,2)] = 5;
-    box_chart[make_pair(2,0)] = 6;
-    box_chart[make_pair(2,1)] = 7;
-    box_chart[make_pair(2,2)] = 8;
-
-    for(int i = 0; i < sudoku_string.length(); i++){
-
-        int value = ((int) sudoku_string.at(i)) - 48;
-        bool isStarting = false;
-
-        if(value != 0){
-            isStarting = true;
-        }
-
-
-        if((i % 9) == 0)
-        {
-            row++; //i % 9 will only be 0 if it is the beginning of a new row
-        }
-
-        col = i % 9; //Indicates column since sudoku is 9x9
-
-        //Box assignment. Look at row and col
-
-        int row_region = row / 3;
-        int col_region = col / 3;
-        //int gets truncated. so 0-2 will be 0, 3 - 5 will be 1, 6 - 8 will be 2
-
-        box = box_chart[make_pair(row_region,col_region)];
-
-        sudoku_array.push_back(cell(value, isStarting, row, col, box));
+    if(sudoku_selector::selection == sudoku_selector::sudokus.size()){
+        sudoku_selector::selection = 0;
     }
 
+    ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
+    sudoku_selector::update_ui();
+}
+
+void sudoku_selector::on_leftButton_clicked()
+{
+    sudoku_selector::selection--;
+
+    if(sudoku_selector::selection == -1){
+        sudoku_selector::selection = sudoku_selector::sudokus.size() - 1;
+    }
+
+    ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
+    sudoku_selector::update_ui();
+}
+
+void sudoku_selector::on_start_button_clicked()
+{
+
+    vector<cell> sudoku_array;
+    sudoku_array.reserve(81);
+
+    //Initialize sudoku array data structure using string
+    sudoku_selector::start(sudoku_selector::sudokus[sudoku_selector::selection], sudoku_array);
+
+    //Passing sudoku_array data to other window
+    game_window->pass_in_sudoku_array(sudoku_array);
+    //Initializing UI for sudoku_game instance
+    game_window->start();
+    game_window->show();
+
+    //Cleaning up memory
+    sudoku_array.clear();
+    sudoku_array.shrink_to_fit();
+
+    //Closing sudoku_selector Window
+    this->close();
+
+
 
 }
 
-
-
 void sudoku_selector::update_ui(){
+
+    //Updates sudoko preview UI
 
     std::string sudoku_selected = sudoku_selector::sudokus[sudoku_selector::selection];
 
@@ -168,50 +178,55 @@ void sudoku_selector::update_ui(){
 
 }
 
-sudoku_selector::~sudoku_selector()
+void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku_array)
 {
-    delete ui;
-}
+    //Preps sudoku_array to be passed into sudoku_game
+    //Takes in a string and stores it inside the referenced sudoku_array
 
-void sudoku_selector::on_rightButton_clicked()
-{
-    sudoku_selector::selection++;
+    int row = -1; //Because it will iterate when i == 0
+    int col = 0;
+    int box = 0;
 
-    if(sudoku_selector::selection == sudoku_selector::sudokus.size()){
-        sudoku_selector::selection = 0;
+    //box chart is essentially a dictionary. reads [row,col]
+    map<pair<int,int>, int> box_chart;
+    box_chart[make_pair(0,0)] = 0;
+    box_chart[make_pair(0,1)] = 1;
+    box_chart[make_pair(0,2)] = 2;
+    box_chart[make_pair(1,0)] = 3;
+    box_chart[make_pair(1,1)] = 4;
+    box_chart[make_pair(1,2)] = 5;
+    box_chart[make_pair(2,0)] = 6;
+    box_chart[make_pair(2,1)] = 7;
+    box_chart[make_pair(2,2)] = 8;
+
+    for(int i = 0; i < sudoku_string.length(); i++){
+
+        int value = ((int) sudoku_string.at(i)) - 48;
+        bool isStarting = false;
+
+        if(value != 0){
+            isStarting = true;
+        }
+
+
+        if((i % 9) == 0)
+        {
+            row++; //i % 9 will only be 0 if it is the beginning of a new row
+        }
+
+        col = i % 9; //Indicates column since sudoku is 9x9
+
+        //Box assignment. Look at row and col
+
+        int row_region = row / 3;
+        int col_region = col / 3;
+        //int gets truncated. so 0-2 will be 0, 3 - 5 will be 1, 6 - 8 will be 2
+
+        box = box_chart[make_pair(row_region,col_region)];
+
+        sudoku_array.push_back(cell(value, isStarting, row, col, box));
     }
 
-    ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
-    sudoku_selector::update_ui();
-}
-
-void sudoku_selector::on_leftButton_clicked()
-{
-    sudoku_selector::selection--;
-
-    if(sudoku_selector::selection == -1){
-        sudoku_selector::selection = sudoku_selector::sudokus.size() - 1;
-    }
-
-    ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
-    sudoku_selector::update_ui();
-}
-
-void sudoku_selector::on_start_button_clicked()
-{
-
-    vector<cell> sudoku_array;
-    sudoku_array.reserve(81);
-
-    //Initialize sudoku array data structure using string
-    sudoku_selector::start(sudoku_selector::sudokus[sudoku_selector::selection], sudoku_array);
-
-    //Passing sudoku_array data to other window
-    w->pass_in_sudoku_array(sudoku_array);
-    w->start();
-    w->show();
-    this->close();
-
-
 
 }
+
