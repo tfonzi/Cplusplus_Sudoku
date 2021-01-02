@@ -23,7 +23,7 @@ public:
     static int selection;
 
     //updates sudoku visual
-    void update();
+    void update_ui();
 
 
     void start(std::string sudoku_string, std::vector<cell> &sudoku_array);

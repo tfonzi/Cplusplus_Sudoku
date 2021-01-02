@@ -19,8 +19,20 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void update(vector<cell> sudoku_array, vector<int> highlighted_cell);
-    //Updates ui grid to match sudoku array and show highlighted cell
+    void update_ui(vector<cell> sudoku_array, vector<int> highlighted_cell);
+    //Updates ui grid to match sudoku array state, highlighted cell, and starting squares
+
+    void update_cell_value(std::vector<cell> sudoku_array);
+    //used in update_ui function to update cell values
+
+    void update_notes_value(std::vector<cell> sudoku_array);
+    //used in update_ui function to update note values
+
+    void update_highlight(std::vector<int> highlighted_cell);
+    //used in update_ui function to update highlight
+
+    void update_starting_squares(std::vector<cell> sudoku_array);
+    //used in update_ui function to update starting squares
 
     void pass_in_sudoku_array(vector<cell> sudoku_array);
     //passes in value for sudoku_array
@@ -38,6 +50,8 @@ public:
     bool check_valid_move(int value);
 
 
+signals:
+    void mainMenu();
 
 
 private slots:

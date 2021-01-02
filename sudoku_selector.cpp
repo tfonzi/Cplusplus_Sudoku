@@ -22,6 +22,9 @@ sudoku_selector::sudoku_selector(QWidget *parent) :
     //Creating sudoku game instance window
     w = new MainWindow();
 
+    //connecting slot for sudoku game window
+    connect(w, &MainWindow::mainMenu, this, &sudoku_selector::show);
+
 }
 
 void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku_array)
@@ -76,7 +79,7 @@ void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku
 
 
 
-void sudoku_selector::update(){
+void sudoku_selector::update_ui(){
 
     std::string sudoku_selected = sudoku_selector::sudokus[sudoku_selector::selection];
 
@@ -161,13 +164,6 @@ void sudoku_selector::update(){
     if((((int) sudoku_selected[79])-48) > 0){ui->Cell_80->setText(QString(QChar(sudoku_selected[79])));}else{ui->Cell_80->setText(" ");}
     if((((int) sudoku_selected[80])-48) > 0){ui->Cell_81->setText(QString(QChar(sudoku_selected[80])));}else{ui->Cell_81->setText(" ");}
 
-
-
-    for (int i = 0; i < 81; i++){
-
-        std::printf("if((((int) sudoku_selected[%d])-48) > 0){ui->Cell_%d->setText(QString(QChar(sudoku_selected[%d])));}else{ui->Cell_%d->setText(cats);}\n",i,i+1,i,i+1);
-    }
-
     return;
 
 }
@@ -186,7 +182,7 @@ void sudoku_selector::on_rightButton_clicked()
     }
 
     ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
-    sudoku_selector::update();
+    sudoku_selector::update_ui();
 }
 
 void sudoku_selector::on_leftButton_clicked()
@@ -198,7 +194,7 @@ void sudoku_selector::on_leftButton_clicked()
     }
 
     ui->selectionLabel->setText(QString::number(sudoku_selector::selection + 1));
-    sudoku_selector::update();
+    sudoku_selector::update_ui();
 }
 
 void sudoku_selector::on_start_button_clicked()
@@ -213,7 +209,6 @@ void sudoku_selector::on_start_button_clicked()
     //Passing sudoku_array data to other window
     w->pass_in_sudoku_array(sudoku_array);
     w->start();
-    this->hide();
     w->show();
     this->close();
 
