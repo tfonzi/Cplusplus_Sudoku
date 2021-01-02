@@ -18239,6 +18239,19 @@ color: rgb(0, 0, 0);
      <string>Return to Main Menu</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="solve_button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>640</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Solve</string>
+    </property>
+   </widget>
    <zorder>cell_1</zorder>
    <zorder>cell_2</zorder>
    <zorder>cell_3</zorder>
@@ -18332,6 +18345,7 @@ color: rgb(0, 0, 0);
    <zorder>eraseNotesButton</zorder>
    <zorder>InvalidMoveError</zorder>
    <zorder>mainMenuButton</zorder>
+   <zorder>solve_button</zorder>
   </widget>
   <action name="actionFile">
    <property name="text">

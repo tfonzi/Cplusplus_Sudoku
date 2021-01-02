@@ -24,6 +24,8 @@ public:
 
     cell(int value, bool isStarting, int row, int col, int box);
 
+    ~cell();
+
     int get_row();
 
     int get_col();

@@ -5,7 +5,14 @@
 
 cell::cell()
 {
-    //default
+    this->value = 0;
+    this->isStarting = false;
+    this->row = 0;
+    this->col = 0;
+    this->box = 0;
+
+    std::vector<bool> zero_notes = {false,false,false,false,false,false,false,false,false};
+    this->set_notes(zero_notes);
 }
 
 cell::cell(int value, bool isStarting, int row, int col, int box)
@@ -18,6 +25,10 @@ cell::cell(int value, bool isStarting, int row, int col, int box)
 
     std::vector<bool> zero_notes = {false,false,false,false,false,false,false,false,false};
     this->set_notes(zero_notes);
+
+}
+
+cell::~cell(){
 
 }
 

@@ -28,13 +28,15 @@ SOURCES += \
         cell.cpp \
         main.cpp \
         sudoku_selector.cpp \
-        sudoku_game.cpp
+        sudoku_game.cpp \
+        sudoku_solver.cpp
 
 HEADERS += \
         cell.h \
         main.h \
         sudoku_selector.h \
-        sudoku_game.h
+        sudoku_game.h \
+        sudoku_solver.h
 
 
 FORMS += \

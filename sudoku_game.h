@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "cell.h"
 #include <vector>
+#include "sudoku_solver.h"
 
 using namespace std;
 
@@ -15,9 +16,17 @@ class sudoku_game : public QMainWindow
 {
     Q_OBJECT
 
+private:
+
+    vector<cell> starting_array;
+
 public:
     explicit sudoku_game(QWidget *parent = nullptr);
     ~sudoku_game();
+
+    void set_starting_array(vector<cell> sudoku_array);
+
+    vector<cell> get_starting_array();
 
     void update_ui(vector<cell> sudoku_array, vector<int> highlighted_cell);
     //Updates ui grid to match sudoku array state, highlighted cell, and starting squares
@@ -45,7 +54,6 @@ public:
     static vector<int> highlighted_cell;
 
     void change_highlight(int row, int col);
-
 
     bool check_valid_move(int value);
 
@@ -227,6 +235,8 @@ private slots:
     void on_cell_Button_81_clicked();
 
     void on_mainMenuButton_clicked();
+
+    void on_solve_button_clicked();
 
 private:
     Ui::sudoku_game *ui;

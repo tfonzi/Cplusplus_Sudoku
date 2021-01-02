@@ -11,15 +11,28 @@ sudoku_game::sudoku_game(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::sudoku_game)
 {
+    //Initializing starting_array. Used for solver
+    vector<cell> starting_array;
+
     //Reserve data for passed in sudoku array
     passed_in_sudoku_array.reserve(81);
     //Initializing highlighted cell
     highlighted_cell.reserve(2);
     highlighted_cell = {0,0};
 
+
     ui->setupUi(this);
 
 }
+
+void sudoku_game::set_starting_array(vector<cell> sudoku_array){
+    this->starting_array = sudoku_array;
+}
+
+vector<cell> sudoku_game::get_starting_array(){
+    return this->starting_array;
+}
+
 
 void sudoku_game::start(){
 
@@ -42,6 +55,9 @@ void sudoku_game::start(){
         }
 
     }
+
+    //Setting starting array. Used for solver
+    sudoku_game::set_starting_array(passed_in_sudoku_array);
 
 
     sudoku_game::update_ui(passed_in_sudoku_array, highlighted_cell);
@@ -224,6 +240,22 @@ void sudoku_game::on_mainMenuButton_clicked()
     this->close();
     emit mainMenu();
 }
+
+
+void sudoku_game::on_solve_button_clicked()
+{
+
+    vector<cell> starting_array = sudoku_game::get_starting_array();
+
+    sudoku_solver solver;
+
+    bool success = solver.backtrack(starting_array);
+
+    vector<cell> solution_array = solver.get_solution_array();
+    sudoku_game::update_cell_value(solution_array);
+
+}
+
 
 
 void sudoku_game::on_cell_Button_1_clicked()
@@ -2681,6 +2713,7 @@ void sudoku_game::update_starting_squares(std::vector<cell> sudoku_array){
     if(sudoku_array[80].get_isStarting()){ui->cell_Button_81->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
 
 }
+
 
 
 
