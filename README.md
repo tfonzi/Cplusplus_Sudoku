@@ -12,7 +12,7 @@ However, there are three rules you must follow, each row must contain 1 - 9 with
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/MainMenu.PNG)
 
-<h3>Game Window:</h3> This is the game window. The program successfully reads what layout the player selects and imports in into a game instance.<br /><br />
+<h3>Game Window:</h3> This is the game window. The program successfully reads what layout the player selects and imports in into a game instance. Starting cells are designated by the blue, while the active cell is highlighted with yellow. Using the number selector lets the player change values in the active cell.<br /><br />
 
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/Sudoku%20Game.PNG)
@@ -35,7 +35,7 @@ This algorithm generates a solution that can be checked against the player's. Th
 Main files. These files initializes and starts the QT program.
 
 <h4>sudoku_selector.c/.h:</h4> 
-These files make up the starting menu. Reads in data from the txt files, allows user to input a sudoku. Creates sudoku_game instance and sends data to it. Interacts with sudoku_selector.ui to make the main menu window.
+These files make up the starting menu. Reads in data from the txt files, allows player to input a sudoku. Creates sudoku_game instance and sends data to it. Interacts with sudoku_selector.ui to make the main menu window.
 
 <h4>sudoku_game.c/.h:</h4> 
 These files make up a sudoko_game instance. This is where the player actually plays sudoku. Interacts with sudoku_game.ui to make the game window.
