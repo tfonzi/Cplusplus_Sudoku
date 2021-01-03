@@ -64,5 +64,6 @@ These are the data files that contain sudokus and their solutions.
 
 4. Stylistic changes -- adding color and themeing to the GUI.
 
+<h2>Github Link:</h2> https://github.com/tfonzi/Cplusplus_Sudoku
 
 
