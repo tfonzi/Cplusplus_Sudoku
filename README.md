@@ -8,24 +8,24 @@ However, there are three rules you must follow, each row must contain 1 - 9 with
 
 <h2>Overview of Game and Features:</h2>
 
-<h3>Main Menu:</h3> Main Menu is the first window of the program. Lets the player select between different sudoku layouts. These layouts are read in through a sudokus.txt file and can be expandable.<br />
+<h3>Main Menu:</h3> Main Menu is the first window of the program. Lets the player select between different sudoku layouts. These layouts are read in through a sudokus.txt file and can be expandable.<br /><br />
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/MainMenu.PNG)
 
-<h3>Game Window:</h3> This is the game window. The program successfully reads what layout the player selects and imports in into a game instance.<br />
+<h3>Game Window:</h3> This is the game window. The program successfully reads what layout the player selects and imports in into a game instance.<br /><br />
 
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/Sudoku%20Game.PNG)
 
 <h3>Features:</h3>
-While playing the game, the player has many options that they can do. They can fill/erase cells with values, add/erase notes to each cell to keep track of what the values could be, and can submit to check for success/failure. The player can ask for a "hint" to nudge them towards a correct solution if they are stuck, as well as, return to the main menu to select a different sudoku game.<br /> 
+While playing the game, the player has many options that they can do. They can fill/erase cells with values, add/erase notes to each cell to keep track of what the values could be, and can submit to check for success/failure. The player can ask for a "hint" to nudge them towards a correct solution if they are stuck, as well as, return to the main menu to select a different sudoku game.<br /><br />
 
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/Features.PNG)
 
 <h3>Success and Hints:</h3>
 When a player completes their sudoku, it is verified for correctness. A backtracking algorithm is implemented that recursively solves a sudoku given it's starting layout. 
-This algorithm generates a solution that can be checked against the player's. The algorithm's solution is also checked with an ground truth solution provided by a solutions.txt, similar to sudokus.txt. The backtracking algorithm's solution is what is used to generate the hint. The hint is manually checking the player's board and making a single cell erase or cell write to make the player's board closer to the solution.<br />
+This algorithm generates a solution that can be checked against the player's. The algorithm's solution is also checked with an ground truth solution provided by a solutions.txt, similar to sudokus.txt. The backtracking algorithm's solution is what is used to generate the hint. The hint is manually checking the player's board and making a single cell erase or cell write to make the player's board closer to the solution.<br /><br />
 
 ![alt text](https://github.com/tfonzi/Cplusplus_Sudoku/blob/main/Success.PNG)
 
