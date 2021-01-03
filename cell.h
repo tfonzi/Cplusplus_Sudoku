@@ -9,11 +9,8 @@ class cell
 private:
 
     int value;
-
     bool isStarting;
-
     std::vector<bool> notes;
-
     int row;
     int col;
     int box;
@@ -44,8 +41,6 @@ public:
 
     bool get_isStarting();
 
-
 };
-
 
 #endif // CELL_H

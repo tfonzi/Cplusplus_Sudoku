@@ -18,6 +18,13 @@ class sudoku_selector : public QWidget
 {
     Q_OBJECT
 
+private:
+    Ui::sudoku_selector *ui;
+    sudoku_game *game_window;
+    std::vector<std::string> sudokus;
+    std::vector<std::string> solutions;
+    int selection;
+
 public:
     explicit sudoku_selector(QWidget *parent = nullptr);
     ~sudoku_selector();
@@ -38,13 +45,6 @@ private slots:
     void on_leftButton_clicked();
 
     void on_start_button_clicked();
-
-private:
-    Ui::sudoku_selector *ui;
-    sudoku_game *game_window;
-    std::vector<std::string> sudokus;
-    std::vector<std::string> solutions;
-    int selection;
 
 };
 

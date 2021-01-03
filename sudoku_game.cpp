@@ -53,7 +53,6 @@ void sudoku_game::start(){
 
             index++;
         }
-
     }
 
     //Setting starting array. Used for solver
@@ -98,7 +97,6 @@ bool sudoku_game::check_valid_move(int value){
 
     //Check if cells with same row, col, or box match in value
     for(int i = 0; i < 81; i++){
-
         if(row == passed_in_sudoku_array[i].get_row()){
             if(value == passed_in_sudoku_array[i].get_value()){
                 ui->StartingSquareError->setVisible(false);
@@ -158,7 +156,6 @@ void sudoku_game::pass_in_sudoku_array(std::vector<cell> sudoku_array)
 {
     //Passes in value of main sudoku array so that the UI can use it at a later time
     passed_in_sudoku_array = sudoku_array;
-
 }
 
 int sudoku_game::calculate_box(int row, int col){
@@ -277,8 +274,42 @@ void sudoku_game::on_mainMenuButton_clicked()
 void sudoku_game::on_hint_button_clicked()
 {
 
+    //Performs step-wise algorithm per button click
+    //Looking at solution, deletes single incorrect cell (ignoring empty cells).
+    //If there are no incorrect cells, write in a single correct cell.
 
+    std::vector<cell> solution_array = get_backtrack_solution();
 
+    //Going backwards, check for incorrect cells
+    for (int i = 80; i >= 0; i--){
+        if(passed_in_sudoku_array[i].get_value() == 0){
+            continue; //skip empty cells
+        }
+        else if(passed_in_sudoku_array[i].get_value() == solution_array[i].get_value()){
+            continue; //skip if cells match
+        }
+        else{
+            //cells are different. Erase and return
+            passed_in_sudoku_array[i].set_value(0);
+            sudoku_game::update_ui(passed_in_sudoku_array, highlighted_cell);
+            return;
+        }
+    }
+
+    //Going forwards, add the correct cell to the first empty
+    for(int i = 0; i < 81; i++){
+        if(passed_in_sudoku_array[i].get_value() == 0){
+            //cell is empty. Write and return
+            passed_in_sudoku_array[i].set_value(solution_array[i].get_value());
+            sudoku_game::update_ui(passed_in_sudoku_array, highlighted_cell);
+            return;
+        }
+        else{
+            continue; //skip filled cells
+        }
+    }
+
+    return; //Return if end is reached -- only instance is if sudoku is succesfully filled out
 }
 
 
@@ -310,6 +341,7 @@ void sudoku_game::on_submit_button_clicked()
 void sudoku_game::on_cell_Button_1_clicked()
 {
     //Same format for all of the cell_button_x_clicked functions
+    //For the UI, there is a button for each cell -- 81 buttons, and each has to be slotted manually in it's own function
 
     //Changing Error Message if neccesary
     ui->InvalidMoveError->setVisible(false);

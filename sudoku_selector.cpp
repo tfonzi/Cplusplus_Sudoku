@@ -36,6 +36,7 @@ void sudoku_selector::on_rightButton_clicked()
 {
     sudoku_selector::selection++;
 
+    //Code for looping around
     if(sudoku_selector::selection == sudoku_selector::sudokus.size()){
         sudoku_selector::selection = 0;
     }
@@ -48,6 +49,7 @@ void sudoku_selector::on_leftButton_clicked()
 {
     sudoku_selector::selection--;
 
+    //Code for looping around
     if(sudoku_selector::selection == -1){
         sudoku_selector::selection = sudoku_selector::sudokus.size() - 1;
     }
@@ -202,7 +204,8 @@ void sudoku_selector::update_ui(){
     if((((int) sudoku_selected[27])-48) > 0){ui->Cell_28->setText(QString(QChar(sudoku_selected[27])));}else{ui->Cell_28->setText(" ");}
     if((((int) sudoku_selected[28])-48) > 0){ui->Cell_29->setText(QString(QChar(sudoku_selected[28])));}else{ui->Cell_29->setText(" ");}
     if((((int) sudoku_selected[29])-48) > 0){ui->Cell_30->setText(QString(QChar(sudoku_selected[29])));}else{ui->Cell_30->setText(" ");}
-    if((((int) sudoku_selected[30])-48) > 0){ui->Cell_31->setText(QString(QChar(sudoku_selected[30])));}else{ui->Cell_31->setText(" ");}if((((int) sudoku_selected[31])-48) > 0){ui->Cell_32->setText(QString(QChar(sudoku_selected[31])));}else{ui->Cell_32->setText(" ");}
+    if((((int) sudoku_selected[30])-48) > 0){ui->Cell_31->setText(QString(QChar(sudoku_selected[30])));}else{ui->Cell_31->setText(" ");}
+    if((((int) sudoku_selected[31])-48) > 0){ui->Cell_32->setText(QString(QChar(sudoku_selected[31])));}else{ui->Cell_32->setText(" ");}
     if((((int) sudoku_selected[32])-48) > 0){ui->Cell_33->setText(QString(QChar(sudoku_selected[32])));}else{ui->Cell_33->setText(" ");}
     if((((int) sudoku_selected[33])-48) > 0){ui->Cell_34->setText(QString(QChar(sudoku_selected[33])));}else{ui->Cell_34->setText(" ");}
     if((((int) sudoku_selected[34])-48) > 0){ui->Cell_35->setText(QString(QChar(sudoku_selected[34])));}else{ui->Cell_35->setText(" ");}
@@ -254,6 +257,5 @@ void sudoku_selector::update_ui(){
     if((((int) sudoku_selected[80])-48) > 0){ui->Cell_81->setText(QString(QChar(sudoku_selected[80])));}else{ui->Cell_81->setText(" ");}
 
     return;
-
 }
 

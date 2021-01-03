@@ -12,10 +12,7 @@ class sudoku_solver{
 private:
 
     std::vector<cell> starting_array;
-
     std::vector<cell> solution_array;
-
-
 
 public:
 
@@ -36,7 +33,6 @@ public:
     int find_next_empty_square(std::vector<cell> sudoku_array);
 
     int calculate_box(int row, int col);
-
 
 };
 

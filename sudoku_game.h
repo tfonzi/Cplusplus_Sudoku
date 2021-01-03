@@ -14,6 +14,14 @@ class sudoku_game : public QMainWindow
 {
     Q_OBJECT
 
+private:
+    Ui::sudoku_game *ui;
+    std::vector<cell> starting_array;
+    std::vector<cell> passed_in_sudoku_array;
+    std::vector<int> highlighted_cell;
+    std::string solution_from_file;
+    std::vector<cell> backtrack_solution;
+
 public:
     explicit sudoku_game(QWidget *parent = nullptr);
     ~sudoku_game();
@@ -240,14 +248,6 @@ private slots:
     void on_hint_button_clicked();
 
     void on_submit_button_clicked();
-
-private:
-    Ui::sudoku_game *ui;
-    std::vector<cell> starting_array;
-    std::vector<cell> passed_in_sudoku_array;
-    std::vector<int> highlighted_cell;
-    std::string solution_from_file;
-    std::vector<cell> backtrack_solution;
 
 };
 

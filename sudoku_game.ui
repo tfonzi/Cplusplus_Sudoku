@@ -18249,7 +18249,7 @@ color: rgb(0, 0, 0);
      </rect>
     </property>
     <property name="text">
-     <string>Solve</string>
+     <string>Hint</string>
     </property>
    </widget>
    <widget class="QPushButton" name="submit_button">
