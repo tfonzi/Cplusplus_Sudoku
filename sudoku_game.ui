@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>721</width>
-    <height>819</height>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18105,7 +18105,7 @@ color: rgb(0, 0, 0);
    <widget class="QLabel" name="StartingSquareError">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>210</x>
       <y>580</y>
       <width>301</width>
       <height>41</height>
@@ -18123,8 +18123,8 @@ color: rgb(0, 0, 0);
    <widget class="QSpinBox" name="userValueInput">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>640</y>
+      <x>300</x>
+      <y>630</y>
       <width>111</width>
       <height>81</height>
      </rect>
@@ -18159,8 +18159,8 @@ color: rgb(0, 0, 0);
    <widget class="QPushButton" name="ToggleNoteButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>620</y>
+      <x>190</x>
+      <y>680</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -18172,8 +18172,8 @@ color: rgb(0, 0, 0);
    <widget class="QPushButton" name="changeValueButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>690</y>
+      <x>190</x>
+      <y>630</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -18185,8 +18185,8 @@ color: rgb(0, 0, 0);
    <widget class="QPushButton" name="eraseButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>720</y>
+      <x>430</x>
+      <y>630</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -18198,8 +18198,8 @@ color: rgb(0, 0, 0);
    <widget class="QPushButton" name="eraseNotesButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>650</y>
+      <x>430</x>
+      <y>680</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -18211,7 +18211,7 @@ color: rgb(0, 0, 0);
    <widget class="QLabel" name="InvalidMoveError">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>200</x>
       <y>580</y>
       <width>331</width>
       <height>41</height>
@@ -18229,8 +18229,8 @@ color: rgb(0, 0, 0);
    <widget class="QPushButton" name="mainMenuButton">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>780</y>
+      <x>560</x>
+      <y>650</y>
       <width>131</width>
       <height>28</height>
      </rect>
@@ -18239,17 +18239,51 @@ color: rgb(0, 0, 0);
      <string>Return to Main Menu</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="solve_button">
+   <widget class="QPushButton" name="hint_button">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>640</y>
+      <y>600</y>
       <width>93</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
      <string>Solve</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="submit_button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>710</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Submit</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="successLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>630</y>
+      <width>131</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Failure!</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <zorder>cell_1</zorder>
@@ -18345,7 +18379,9 @@ color: rgb(0, 0, 0);
    <zorder>eraseNotesButton</zorder>
    <zorder>InvalidMoveError</zorder>
    <zorder>mainMenuButton</zorder>
-   <zorder>solve_button</zorder>
+   <zorder>hint_button</zorder>
+   <zorder>submit_button</zorder>
+   <zorder>successLabel</zorder>
   </widget>
   <action name="actionFile">
    <property name="text">

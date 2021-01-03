@@ -35,6 +35,8 @@ public:
 
     int find_next_empty_square(std::vector<cell> sudoku_array);
 
+    int calculate_box(int row, int col);
+
 
 };
 

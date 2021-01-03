@@ -1,22 +1,22 @@
 #include "sudoku_selector.h"
 #include "ui_sudoku_selector.h"
+#include <QFile>
+#include <QTextStream>
 #include <iostream>
+#include <QDir>
 
-
-std::vector<std::string> sudoku_selector::sudokus;
-
-int sudoku_selector::selection;
 
 sudoku_selector::sudoku_selector(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::sudoku_selector)
 {
-    //Starting out with 5 to start. Could expand. Future implementation includes reading in a data file of strings.
-    //Strings are 81 long. each character represents value of sudoku. Zeros are blank.
 
-    sudoku_selector::sudokus = {"004300209005009001070060043006002087190007400050083000600000105003508690042910300","040100050107003960520008000000000017000906800803050620090060543600080700250097100","600120384008459072000006005000264030070080006940003000310000050089700000502000190","497200000100400005000016098620300040300900000001072600002005870000600004530097061","005910308009403060027500100030000201000820007006007004000080000640150700890000420"};
+    //Initialize
     sudoku_selector::selection = 0;
+
     ui->setupUi(this);
+
+    read_Files();
     update_ui();
 
     //Creating sudoku game instance window
@@ -26,11 +26,6 @@ sudoku_selector::sudoku_selector(QWidget *parent) :
     connect(game_window, &sudoku_game::mainMenu, this, &sudoku_selector::show);
 
 }
-
-
-
-
-
 
 sudoku_selector::~sudoku_selector()
 {
@@ -64,30 +59,23 @@ void sudoku_selector::on_leftButton_clicked()
 void sudoku_selector::on_start_button_clicked()
 {
 
-    vector<cell> sudoku_array;
+    std::vector<cell> sudoku_array;
     sudoku_array.reserve(81);
 
     //Initialize sudoku array data structure using string
     sudoku_selector::start(sudoku_selector::sudokus[sudoku_selector::selection], sudoku_array);
 
-    //Passing sudoku_array data to other window
+    //Passing sudoku_array data and solution to other window
     game_window->pass_in_sudoku_array(sudoku_array);
+    game_window->set_solution_from_file(sudoku_selector::solutions[sudoku_selector::selection]);
+
     //Initializing UI for sudoku_game instance
     game_window->start();
     game_window->show();
 
-    //Cleaning up memory
-    sudoku_array.clear();
-    sudoku_array.shrink_to_fit();
-
     //Closing sudoku_selector Window
     this->close();
-
-
-
 }
-
-
 
 void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku_array)
 {
@@ -98,18 +86,6 @@ void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku
     int col = 0;
     int box = 0;
 
-    //box chart is essentially a dictionary. reads [row,col]
-    map<pair<int,int>, int> box_chart;
-    box_chart[make_pair(0,0)] = 0;
-    box_chart[make_pair(0,1)] = 1;
-    box_chart[make_pair(0,2)] = 2;
-    box_chart[make_pair(1,0)] = 3;
-    box_chart[make_pair(1,1)] = 4;
-    box_chart[make_pair(1,2)] = 5;
-    box_chart[make_pair(2,0)] = 6;
-    box_chart[make_pair(2,1)] = 7;
-    box_chart[make_pair(2,2)] = 8;
-
     for(int i = 0; i < sudoku_string.length(); i++){
 
         int value = ((int) sudoku_string.at(i)) - 48;
@@ -119,7 +95,6 @@ void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku
             isStarting = true;
         }
 
-
         if((i % 9) == 0)
         {
             row++; //i % 9 will only be 0 if it is the beginning of a new row
@@ -127,19 +102,69 @@ void sudoku_selector::start(std::string sudoku_string, std::vector<cell> &sudoku
 
         col = i % 9; //Indicates column since sudoku is 9x9
 
-        //Box assignment. Look at row and col
-
-        int row_region = row / 3;
-        int col_region = col / 3;
-        //int gets truncated. so 0-2 will be 0, 3 - 5 will be 1, 6 - 8 will be 2
-
-        box = box_chart[make_pair(row_region,col_region)];
+        box = game_window->calculate_box(row,col);
 
         sudoku_array.push_back(cell(value, isStarting, row, col, box));
     }
-
-
 }
+
+void sudoku_selector::read_Files(){
+
+    //Reading sudokus.txt-----------
+
+    std::string sudoku; //Strings are 81 long. each character represents values of sudoku. Zeros are blank.
+
+    QString path = QDir::currentPath();
+    path.append("/sudokus.txt");
+    //Importing sudokus.txt file into sudokus array
+    QFile sudoku_file(path);
+
+    //Error check if file does not exist
+    if (!sudoku_file.exists()) {
+        printf("\nMissing data file!\n");
+        std::string error_path = path.toStdString();
+        std::cout << "\nLooking for file: " << error_path << std::endl;
+        this->close();
+    }
+
+    if (sudoku_file.open(QIODevice::ReadOnly)){
+        QTextStream in(&sudoku_file);
+        while(!in.atEnd()){
+            QString line = in.readLine();
+            sudoku = line.toStdString();
+            sudoku_selector::sudokus.push_back(sudoku);
+        }
+        sudoku_file.close();
+    }
+
+
+    //Reading solutions.txt-----------
+    //This file is for backtracking algorithm verification
+    sudoku = "";
+    path = QDir::currentPath();
+    path.append("/solutions.txt");
+
+    QFile solutions_file(path);
+
+    //Error check if file does not exist
+    if (!solutions_file.exists()) {
+        printf("\nMissing data file!\n");
+        std::string error_path = path.toStdString();
+        std::cout << "\nLooking for file: " << error_path << std::endl;
+        this->close();
+    }
+
+    if (solutions_file.open(QIODevice::ReadOnly)){
+        QTextStream in(&solutions_file);
+        while(!in.atEnd()){
+            QString line = in.readLine();
+            sudoku = line.toStdString();
+            sudoku_selector::solutions.push_back(sudoku);
+        }
+        solutions_file.close();
+    }
+}
+
 
 void sudoku_selector::update_ui(){
 

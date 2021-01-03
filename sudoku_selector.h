@@ -6,6 +6,9 @@
 #include <string.h>
 #include <cell.h>
 #include "sudoku_game.h"
+#include <map>
+#include <fstream>
+#include <iostream>
 
 namespace Ui {
 class sudoku_selector;
@@ -19,9 +22,6 @@ public:
     explicit sudoku_selector(QWidget *parent = nullptr);
     ~sudoku_selector();
 
-    static std::vector<std::string> sudokus;
-    static int selection;
-
     //updates sudoku visual
     void update_ui();
 
@@ -29,6 +29,7 @@ public:
     void start(std::string sudoku_string, std::vector<cell> &sudoku_array);
     //Populates cell vector "sudoku_array" using input string
 
+    void read_Files();
 
 
 private slots:
@@ -41,6 +42,10 @@ private slots:
 private:
     Ui::sudoku_selector *ui;
     sudoku_game *game_window;
+    std::vector<std::string> sudokus;
+    std::vector<std::string> solutions;
+    int selection;
+
 };
 
 #endif // SUDOKU_SELECTOR_H

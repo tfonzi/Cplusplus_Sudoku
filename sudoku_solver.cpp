@@ -70,23 +70,11 @@ bool sudoku_solver::is_valid(std::vector<cell> sudoku_array, std::vector<int> lo
     //Checks cell designated by location with others in same row, col, and box
     //if the values == eachother, then the move is invalid
 
-    //box chart is essentially a dictionary. reads [row,col]
-    std::map<std::pair<int,int>, int> box_chart;
-    box_chart[std::make_pair(0,0)] = 0;
-    box_chart[std::make_pair(0,1)] = 1;
-    box_chart[std::make_pair(0,2)] = 2;
-    box_chart[std::make_pair(1,0)] = 3;
-    box_chart[std::make_pair(1,1)] = 4;
-    box_chart[std::make_pair(1,2)] = 5;
-    box_chart[std::make_pair(2,0)] = 6;
-    box_chart[std::make_pair(2,1)] = 7;
-    box_chart[std::make_pair(2,2)] = 8;
 
     int row = location[0];
     int col = location[1];
-    int row_region = row / 3;
-    int col_region = col / 3;
-    int box = box_chart[std::make_pair(row_region,col_region)];
+    int box = calculate_box(row, col);
+
 
     //Check if cells with same row, col, or box match in value
     for(int i = 0; i < 81; i++){
@@ -122,4 +110,24 @@ int sudoku_solver::find_next_empty_square(std::vector<cell> sudoku_array){
         }
     }
     return -1; //There are no more empty squares
+}
+
+int sudoku_solver::calculate_box(int row, int col){
+
+    //box chart is essentially a dictionary. reads [row,col]
+    std::map<std::pair<int,int>, int> box_chart;
+    box_chart[std::make_pair(0,0)] = 0;
+    box_chart[std::make_pair(0,1)] = 1;
+    box_chart[std::make_pair(0,2)] = 2;
+    box_chart[std::make_pair(1,0)] = 3;
+    box_chart[std::make_pair(1,1)] = 4;
+    box_chart[std::make_pair(1,2)] = 5;
+    box_chart[std::make_pair(2,0)] = 6;
+    box_chart[std::make_pair(2,1)] = 7;
+    box_chart[std::make_pair(2,2)] = 8;
+
+    int row_region = row / 3;
+    int col_region = col / 3;
+
+    return box_chart[std::make_pair(row_region,col_region)];
 }

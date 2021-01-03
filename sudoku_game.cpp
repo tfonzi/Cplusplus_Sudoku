@@ -1,38 +1,38 @@
 #include "sudoku_game.h"
 #include "ui_sudoku_game.h"
+#include <QString>
 #include <iostream>
-
-//Use of UI-scope variable is not prefered. Better implementation of this is a good goal for future
-vector<cell> sudoku_game::passed_in_sudoku_array;
-
-vector<int> sudoku_game::highlighted_cell;
 
 sudoku_game::sudoku_game(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::sudoku_game)
 {
-    //Initializing starting_array. Used for solver
-    vector<cell> starting_array;
-
-    //Reserve data for passed in sudoku array
     passed_in_sudoku_array.reserve(81);
-    //Initializing highlighted cell
     highlighted_cell.reserve(2);
     highlighted_cell = {0,0};
 
-
     ui->setupUi(this);
-
 }
 
-void sudoku_game::set_starting_array(vector<cell> sudoku_array){
+void sudoku_game::set_starting_array(std::vector<cell> sudoku_array){
     this->starting_array = sudoku_array;
 }
 
-vector<cell> sudoku_game::get_starting_array(){
+std::vector<cell> sudoku_game::get_starting_array(){
     return this->starting_array;
 }
 
+void sudoku_game::set_backtrack_solution(std::vector<cell> sudoku_array){
+    this->backtrack_solution = sudoku_array;
+}
+
+std::vector<cell> sudoku_game::get_backtrack_solution(){
+    return this->backtrack_solution;
+}
+
+void sudoku_game::set_solution_from_file(std::string solution){
+    this->solution_from_file = solution;
+}
 
 void sudoku_game::start(){
 
@@ -59,34 +59,42 @@ void sudoku_game::start(){
     //Setting starting array. Used for solver
     sudoku_game::set_starting_array(passed_in_sudoku_array);
 
+    //Generate solution using backtracking algorithm at start
+    std::vector<cell> starting_array = sudoku_game::get_starting_array();
+    sudoku_solver solver;
+    bool success = solver.backtrack(starting_array);
+    std::vector<cell> solution_array = solver.get_solution_array();
+
+    //Checking if solutions match
+    std::string generated_solution = "";
+    for(int i = 0; i < 81; i++){
+        generated_solution += (char) (solution_array[i].get_value() + 48);
+    }
+
+    if(generated_solution == sudoku_game::solution_from_file){
+        std::cout << "Backtracking solution verified." << std::endl;
+        sudoku_game::set_backtrack_solution(solution_array);
+    }
+    else{
+        std::cout << "Backtracking solution incorrect." << std::endl;
+
+    }
 
     sudoku_game::update_ui(passed_in_sudoku_array, highlighted_cell);
     ui->StartingSquareError->setVisible(false);
     ui->InvalidMoveError->setVisible(false);
+    ui->successLabel->setVisible(false);
+
 }
 
 bool sudoku_game::check_valid_move(int value){
     //Checks highlighted square with others in same row, col, and box
     //if the values == eachother, then the move is invalid
 
-    //box chart is essentially a dictionary. reads [row,col]
-    map<pair<int,int>, int> box_chart;
-    box_chart[make_pair(0,0)] = 0;
-    box_chart[make_pair(0,1)] = 1;
-    box_chart[make_pair(0,2)] = 2;
-    box_chart[make_pair(1,0)] = 3;
-    box_chart[make_pair(1,1)] = 4;
-    box_chart[make_pair(1,2)] = 5;
-    box_chart[make_pair(2,0)] = 6;
-    box_chart[make_pair(2,1)] = 7;
-    box_chart[make_pair(2,2)] = 8;
-
     int row = highlighted_cell[0];
     int col = highlighted_cell[1];
-    int row_region = row / 3;
-    int col_region = col / 3;
-    int box = box_chart[make_pair(row_region,col_region)];
 
+    int box = calculate_box(row,col);
 
     //Check if cells with same row, col, or box match in value
     for(int i = 0; i < 81; i++){
@@ -119,6 +127,7 @@ bool sudoku_game::check_valid_move(int value){
     return true;
 }
 
+
 void sudoku_game::change_highlight(int row, int col){
 
     highlighted_cell[0] = row;
@@ -126,7 +135,7 @@ void sudoku_game::change_highlight(int row, int col){
 
 }
 
-void sudoku_game::update_ui(vector<cell> sudoku_array, vector<int> highlighted_cell)
+void sudoku_game::update_ui(std::vector<cell> sudoku_array, std::vector<int> highlighted_cell)
 {
     //Updates ui grid to match sudoku array
 
@@ -145,11 +154,31 @@ void sudoku_game::update_ui(vector<cell> sudoku_array, vector<int> highlighted_c
 
 }
 
-void sudoku_game::pass_in_sudoku_array(vector<cell> sudoku_array)
+void sudoku_game::pass_in_sudoku_array(std::vector<cell> sudoku_array)
 {
     //Passes in value of main sudoku array so that the UI can use it at a later time
     passed_in_sudoku_array = sudoku_array;
 
+}
+
+int sudoku_game::calculate_box(int row, int col){
+
+    //box chart is essentially a dictionary. reads [row,col]
+    std::map<std::pair<int,int>, int> box_chart;
+    box_chart[std::make_pair(0,0)] = 0;
+    box_chart[std::make_pair(0,1)] = 1;
+    box_chart[std::make_pair(0,2)] = 2;
+    box_chart[std::make_pair(1,0)] = 3;
+    box_chart[std::make_pair(1,1)] = 4;
+    box_chart[std::make_pair(1,2)] = 5;
+    box_chart[std::make_pair(2,0)] = 6;
+    box_chart[std::make_pair(2,1)] = 7;
+    box_chart[std::make_pair(2,2)] = 8;
+
+    int row_region = row / 3;
+    int col_region = col / 3;
+
+    return box_chart[std::make_pair(row_region,col_region)];
 }
 
 sudoku_game::~sudoku_game()
@@ -184,10 +213,8 @@ void sudoku_game::on_eraseNotesButton_clicked()
         int col = passed_in_sudoku_array[i].get_col();
 
         if((highlighted_cell[0] == row) && (highlighted_cell[1] == col)){
-            vector<bool> zero_notes = {false,false,false,false,false,false,false,false,false};
+            std::vector<bool> zero_notes = {false,false,false,false,false,false,false,false,false};
             passed_in_sudoku_array[i].set_notes(zero_notes);
-            zero_notes.clear();
-            zero_notes.shrink_to_fit();
             sudoku_game::update_ui(passed_in_sudoku_array, highlighted_cell);
             break;
         }
@@ -206,6 +233,9 @@ void sudoku_game::on_changeValueButton_clicked()
         return;
     }
 
+    //If it is a valid move
+    ui->successLabel->setVisible(false);
+
     //Finding highlighted cell
 
     for (int i = 0; i < 81; i++){
@@ -222,6 +252,8 @@ void sudoku_game::on_changeValueButton_clicked()
 
 void sudoku_game::on_eraseButton_clicked()
 {
+    ui->successLabel->setVisible(false);
+
     for (int i = 0; i < 81; i++){
         int row = passed_in_sudoku_array[i].get_row();
         int col = passed_in_sudoku_array[i].get_col();
@@ -242,21 +274,38 @@ void sudoku_game::on_mainMenuButton_clicked()
 }
 
 
-void sudoku_game::on_solve_button_clicked()
+void sudoku_game::on_hint_button_clicked()
 {
 
-    vector<cell> starting_array = sudoku_game::get_starting_array();
 
-    sudoku_solver solver;
-
-    bool success = solver.backtrack(starting_array);
-
-    vector<cell> solution_array = solver.get_solution_array();
-    sudoku_game::update_cell_value(solution_array);
 
 }
 
 
+void sudoku_game::on_submit_button_clicked()
+{
+    //Need to check for valid submission
+    std::vector<cell> solution = sudoku_game::get_backtrack_solution();
+
+    std::string submission_string = "";
+    std::string solution_string = "";
+
+    //Converting to strings
+    for(int i = 0; i < 81; i++){
+        submission_string += (char) (passed_in_sudoku_array[i].get_value() + 48);
+        solution_string += (char) (solution[i].get_value() + 48);
+    }
+
+    //Check Strings for Success
+    if(submission_string == solution_string){
+        ui->successLabel->setText("Success!");
+        ui->successLabel->setVisible(true);
+    }
+    else{
+        ui->successLabel->setText("Failure!");
+        ui->successLabel->setVisible(true);
+    }
+}
 
 void sudoku_game::on_cell_Button_1_clicked()
 {
@@ -1412,18 +1461,14 @@ void sudoku_game::update_notes_value(std::vector<cell> sudoku_array){
 
     //Setting Note values
 
-    vector<bool> notes_list;
+    std::vector<bool> notes_list;
     //Reserving 81 x 9 for notes
     notes_list.reserve(729);
 
     //Adding notes to long note vector for ease
     for(int i = 0; i < 81; i++){
-        vector<bool> notes = sudoku_array[i].get_notes();
+        std::vector<bool> notes = sudoku_array[i].get_notes();
         notes_list.insert(end(notes_list), begin(notes), end(notes));
-
-        //Clearing space
-        notes.clear();
-        notes.shrink_to_fit();
      }
 
     //Changing UI for notes
@@ -2156,99 +2201,96 @@ void sudoku_game::update_notes_value(std::vector<cell> sudoku_array){
     if(notes_list[726] == true){ui->note_7_cell_81->setVisible(true);}else{ui->note_7_cell_81->setVisible(false);}
     if(notes_list[727] == true){ui->note_8_cell_81->setVisible(true);}else{ui->note_8_cell_81->setVisible(false);}
     if(notes_list[728] == true){ui->note_9_cell_81->setVisible(true);}else{ui->note_9_cell_81->setVisible(false);}
-
-    //Clearing space
-    notes_list.clear();
-    notes_list.shrink_to_fit();
-
 }
 
 void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
 
     //Adding change in UI for highlighted square
 
+    QString grey = "background-color: rgba(218, 218, 218, 100)";
+
     //Removing previous highlight
-    ui->cell_Button_1->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_2->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_3->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_4->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_5->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_6->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_7->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_8->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_9->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_10->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_11->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_12->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_13->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_14->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_15->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_16->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_17->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_18->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_19->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_20->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_21->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_22->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_23->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_24->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_25->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_26->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_27->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_28->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_29->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_30->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_31->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_32->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_33->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_34->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_35->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_36->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_37->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_38->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_39->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_40->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_41->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_42->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_43->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_44->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_45->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_46->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_47->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_48->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_49->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_50->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_51->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_52->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_53->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_54->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_55->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_56->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_57->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_58->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_59->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_60->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_61->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_62->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_63->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_64->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_65->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_66->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_67->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_68->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_69->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_70->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_71->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_72->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_73->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_74->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_75->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_76->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_77->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_78->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_79->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_80->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
-    ui->cell_Button_81->setStyleSheet("background-color: rgba(218, 218, 218, 100)");
+    ui->cell_Button_1->setStyleSheet(grey);
+    ui->cell_Button_2->setStyleSheet(grey);
+    ui->cell_Button_3->setStyleSheet(grey);
+    ui->cell_Button_4->setStyleSheet(grey);
+    ui->cell_Button_5->setStyleSheet(grey);
+    ui->cell_Button_6->setStyleSheet(grey);
+    ui->cell_Button_7->setStyleSheet(grey);
+    ui->cell_Button_8->setStyleSheet(grey);
+    ui->cell_Button_9->setStyleSheet(grey);
+    ui->cell_Button_10->setStyleSheet(grey);
+    ui->cell_Button_11->setStyleSheet(grey);
+    ui->cell_Button_12->setStyleSheet(grey);
+    ui->cell_Button_13->setStyleSheet(grey);
+    ui->cell_Button_14->setStyleSheet(grey);
+    ui->cell_Button_15->setStyleSheet(grey);
+    ui->cell_Button_16->setStyleSheet(grey);
+    ui->cell_Button_17->setStyleSheet(grey);
+    ui->cell_Button_18->setStyleSheet(grey);
+    ui->cell_Button_19->setStyleSheet(grey);
+    ui->cell_Button_20->setStyleSheet(grey);
+    ui->cell_Button_21->setStyleSheet(grey);
+    ui->cell_Button_22->setStyleSheet(grey);
+    ui->cell_Button_23->setStyleSheet(grey);
+    ui->cell_Button_24->setStyleSheet(grey);
+    ui->cell_Button_25->setStyleSheet(grey);
+    ui->cell_Button_26->setStyleSheet(grey);
+    ui->cell_Button_27->setStyleSheet(grey);
+    ui->cell_Button_28->setStyleSheet(grey);
+    ui->cell_Button_29->setStyleSheet(grey);
+    ui->cell_Button_30->setStyleSheet(grey);
+    ui->cell_Button_31->setStyleSheet(grey);
+    ui->cell_Button_32->setStyleSheet(grey);
+    ui->cell_Button_33->setStyleSheet(grey);
+    ui->cell_Button_34->setStyleSheet(grey);
+    ui->cell_Button_35->setStyleSheet(grey);
+    ui->cell_Button_36->setStyleSheet(grey);
+    ui->cell_Button_37->setStyleSheet(grey);
+    ui->cell_Button_38->setStyleSheet(grey);
+    ui->cell_Button_39->setStyleSheet(grey);
+    ui->cell_Button_40->setStyleSheet(grey);
+    ui->cell_Button_41->setStyleSheet(grey);
+    ui->cell_Button_42->setStyleSheet(grey);
+    ui->cell_Button_43->setStyleSheet(grey);
+    ui->cell_Button_44->setStyleSheet(grey);
+    ui->cell_Button_45->setStyleSheet(grey);
+    ui->cell_Button_46->setStyleSheet(grey);
+    ui->cell_Button_47->setStyleSheet(grey);
+    ui->cell_Button_48->setStyleSheet(grey);
+    ui->cell_Button_49->setStyleSheet(grey);
+    ui->cell_Button_50->setStyleSheet(grey);
+    ui->cell_Button_51->setStyleSheet(grey);
+    ui->cell_Button_52->setStyleSheet(grey);
+    ui->cell_Button_53->setStyleSheet(grey);
+    ui->cell_Button_54->setStyleSheet(grey);
+    ui->cell_Button_55->setStyleSheet(grey);
+    ui->cell_Button_56->setStyleSheet(grey);
+    ui->cell_Button_57->setStyleSheet(grey);
+    ui->cell_Button_58->setStyleSheet(grey);
+    ui->cell_Button_59->setStyleSheet(grey);
+    ui->cell_Button_60->setStyleSheet(grey);
+    ui->cell_Button_61->setStyleSheet(grey);
+    ui->cell_Button_62->setStyleSheet(grey);
+    ui->cell_Button_63->setStyleSheet(grey);
+    ui->cell_Button_64->setStyleSheet(grey);
+    ui->cell_Button_65->setStyleSheet(grey);
+    ui->cell_Button_66->setStyleSheet(grey);
+    ui->cell_Button_67->setStyleSheet(grey);
+    ui->cell_Button_68->setStyleSheet(grey);
+    ui->cell_Button_69->setStyleSheet(grey);
+    ui->cell_Button_70->setStyleSheet(grey);
+    ui->cell_Button_71->setStyleSheet(grey);
+    ui->cell_Button_72->setStyleSheet(grey);
+    ui->cell_Button_73->setStyleSheet(grey);
+    ui->cell_Button_74->setStyleSheet(grey);
+    ui->cell_Button_75->setStyleSheet(grey);
+    ui->cell_Button_76->setStyleSheet(grey);
+    ui->cell_Button_77->setStyleSheet(grey);
+    ui->cell_Button_78->setStyleSheet(grey);
+    ui->cell_Button_79->setStyleSheet(grey);
+    ui->cell_Button_80->setStyleSheet(grey);
+    ui->cell_Button_81->setStyleSheet(grey);
 
 
     //Adding new highlight in accordance to highlighted cell
@@ -2256,44 +2298,46 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
     int row = highlighted_cell[0];
     int col = highlighted_cell[1];
 
+    QString yellow = "background-color: rgba(255, 255, 127, 100)";
+
     switch (row){
 
         case 0:
         switch (col){
             case 0:
-            ui->cell_Button_1->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_1->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_2->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_2->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_3->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_3->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_4->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_4->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_5->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_5->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_6->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_6->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_7->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_7->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_8->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_8->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_9->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_9->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2301,39 +2345,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 1:
         switch (col){
             case 0:
-            ui->cell_Button_10->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_10->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_11->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_11->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_12->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_12->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_13->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_13->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_14->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_14->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_15->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_15->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_16->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_16->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_17->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_17->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_18->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_18->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2342,39 +2386,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 2:
         switch (col){
             case 0:
-            ui->cell_Button_19->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_19->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_20->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_20->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_21->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_21->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_22->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_22->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_23->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_23->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_24->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_24->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_25->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_25->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_26->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_26->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_27->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_27->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2383,39 +2427,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 3:
         switch (col){
             case 0:
-            ui->cell_Button_28->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_28->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_29->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_29->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_30->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_30->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_31->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_31->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_32->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_32->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_33->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_33->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_34->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_34->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_35->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_35->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_36->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_36->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2423,39 +2467,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 4:
         switch (col){
             case 0:
-            ui->cell_Button_37->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_37->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_38->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_38->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_39->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_39->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_40->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_40->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_41->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_41->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_42->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_42->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_43->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_43->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_44->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_44->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_45->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_45->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2463,39 +2507,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 5:
         switch (col){
             case 0:
-            ui->cell_Button_46->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_46->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_47->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_47->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_48->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_48->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_49->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_49->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_50->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_50->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_51->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_51->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_52->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_52->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_53->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_53->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_54->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_54->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2503,39 +2547,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 6:
         switch (col){
             case 0:
-            ui->cell_Button_55->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_55->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_56->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_56->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_57->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_57->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_58->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_58->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_59->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_59->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_60->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_60->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_61->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_61->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_62->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_62->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_63->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_63->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2543,39 +2587,39 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 7:
         switch (col){
             case 0:
-            ui->cell_Button_64->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_64->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_65->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_65->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_66->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_66->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_67->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_67->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_68->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_68->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_69->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_69->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_70->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_70->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_71->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_71->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_72->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_72->setStyleSheet(yellow);
             break;
         }
         break;
@@ -2583,137 +2627,131 @@ void sudoku_game::update_highlight(std::vector<int> highlighted_cell){
         case 8:
         switch (col){
             case 0:
-            ui->cell_Button_73->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_73->setStyleSheet(yellow);
             break;
 
             case 1:
-            ui->cell_Button_74->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_74->setStyleSheet(yellow);
             break;
 
             case 2:
-            ui->cell_Button_75->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_75->setStyleSheet(yellow);
             break;
 
             case 3:
-            ui->cell_Button_76->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_76->setStyleSheet(yellow);
             break;
 
             case 4:
-            ui->cell_Button_77->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_77->setStyleSheet(yellow);
             break;
 
             case 5:
-            ui->cell_Button_78->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_78->setStyleSheet(yellow);
             break;
 
             case 6:
-            ui->cell_Button_79->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_79->setStyleSheet(yellow);
             break;
 
             case 7:
-            ui->cell_Button_80->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_80->setStyleSheet(yellow);
             break;
 
             case 8:
-            ui->cell_Button_81->setStyleSheet("background-color: rgba(255, 255, 127, 100)");
+            ui->cell_Button_81->setStyleSheet(yellow);
             break;
         }
         break;
-
     }
-
-
-
 }
 
 void sudoku_game::update_starting_squares(std::vector<cell> sudoku_array){
 
     //Changing Color of Starting Square Text
 
-    if(sudoku_array[0].get_isStarting()){ui->cell_Button_1->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[1].get_isStarting()){ui->cell_Button_2->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[2].get_isStarting()){ui->cell_Button_3->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[3].get_isStarting()){ui->cell_Button_4->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[4].get_isStarting()){ui->cell_Button_5->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[5].get_isStarting()){ui->cell_Button_6->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[6].get_isStarting()){ui->cell_Button_7->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[7].get_isStarting()){ui->cell_Button_8->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[8].get_isStarting()){ui->cell_Button_9->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[9].get_isStarting()){ui->cell_Button_10->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[10].get_isStarting()){ui->cell_Button_11->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[11].get_isStarting()){ui->cell_Button_12->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[12].get_isStarting()){ui->cell_Button_13->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[13].get_isStarting()){ui->cell_Button_14->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[14].get_isStarting()){ui->cell_Button_15->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[15].get_isStarting()){ui->cell_Button_16->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[16].get_isStarting()){ui->cell_Button_17->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[17].get_isStarting()){ui->cell_Button_18->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[18].get_isStarting()){ui->cell_Button_19->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[19].get_isStarting()){ui->cell_Button_20->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[20].get_isStarting()){ui->cell_Button_21->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[21].get_isStarting()){ui->cell_Button_22->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[22].get_isStarting()){ui->cell_Button_23->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[23].get_isStarting()){ui->cell_Button_24->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[24].get_isStarting()){ui->cell_Button_25->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[25].get_isStarting()){ui->cell_Button_26->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[26].get_isStarting()){ui->cell_Button_27->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[27].get_isStarting()){ui->cell_Button_28->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[28].get_isStarting()){ui->cell_Button_29->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[29].get_isStarting()){ui->cell_Button_30->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[30].get_isStarting()){ui->cell_Button_31->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[31].get_isStarting()){ui->cell_Button_32->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[32].get_isStarting()){ui->cell_Button_33->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[33].get_isStarting()){ui->cell_Button_34->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[34].get_isStarting()){ui->cell_Button_35->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[35].get_isStarting()){ui->cell_Button_36->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[36].get_isStarting()){ui->cell_Button_37->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[37].get_isStarting()){ui->cell_Button_38->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[38].get_isStarting()){ui->cell_Button_39->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[39].get_isStarting()){ui->cell_Button_40->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[40].get_isStarting()){ui->cell_Button_41->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[41].get_isStarting()){ui->cell_Button_42->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[42].get_isStarting()){ui->cell_Button_43->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[43].get_isStarting()){ui->cell_Button_44->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[44].get_isStarting()){ui->cell_Button_45->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[45].get_isStarting()){ui->cell_Button_46->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[46].get_isStarting()){ui->cell_Button_47->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[47].get_isStarting()){ui->cell_Button_48->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[48].get_isStarting()){ui->cell_Button_49->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[49].get_isStarting()){ui->cell_Button_50->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[50].get_isStarting()){ui->cell_Button_51->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[51].get_isStarting()){ui->cell_Button_52->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[52].get_isStarting()){ui->cell_Button_53->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[53].get_isStarting()){ui->cell_Button_54->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[54].get_isStarting()){ui->cell_Button_55->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[55].get_isStarting()){ui->cell_Button_56->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[56].get_isStarting()){ui->cell_Button_57->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[57].get_isStarting()){ui->cell_Button_58->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[58].get_isStarting()){ui->cell_Button_59->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[59].get_isStarting()){ui->cell_Button_60->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[60].get_isStarting()){ui->cell_Button_61->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[61].get_isStarting()){ui->cell_Button_62->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[62].get_isStarting()){ui->cell_Button_63->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[63].get_isStarting()){ui->cell_Button_64->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[64].get_isStarting()){ui->cell_Button_65->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[65].get_isStarting()){ui->cell_Button_66->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[66].get_isStarting()){ui->cell_Button_67->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[67].get_isStarting()){ui->cell_Button_68->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[68].get_isStarting()){ui->cell_Button_69->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[69].get_isStarting()){ui->cell_Button_70->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[70].get_isStarting()){ui->cell_Button_71->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[71].get_isStarting()){ui->cell_Button_72->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[72].get_isStarting()){ui->cell_Button_73->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[73].get_isStarting()){ui->cell_Button_74->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[74].get_isStarting()){ui->cell_Button_75->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[75].get_isStarting()){ui->cell_Button_76->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[76].get_isStarting()){ui->cell_Button_77->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[77].get_isStarting()){ui->cell_Button_78->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[78].get_isStarting()){ui->cell_Button_79->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[79].get_isStarting()){ui->cell_Button_80->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
-    if(sudoku_array[80].get_isStarting()){ui->cell_Button_81->setStyleSheet("background-color: rgba(157, 187, 255,100)");}
+    QString blue = "background-color: rgba(157, 187, 255,100)";
+
+    if(sudoku_array[0].get_isStarting()){ui->cell_Button_1->setStyleSheet(blue);}
+    if(sudoku_array[1].get_isStarting()){ui->cell_Button_2->setStyleSheet(blue);}
+    if(sudoku_array[2].get_isStarting()){ui->cell_Button_3->setStyleSheet(blue);}
+    if(sudoku_array[3].get_isStarting()){ui->cell_Button_4->setStyleSheet(blue);}
+    if(sudoku_array[4].get_isStarting()){ui->cell_Button_5->setStyleSheet(blue);}
+    if(sudoku_array[5].get_isStarting()){ui->cell_Button_6->setStyleSheet(blue);}
+    if(sudoku_array[6].get_isStarting()){ui->cell_Button_7->setStyleSheet(blue);}
+    if(sudoku_array[7].get_isStarting()){ui->cell_Button_8->setStyleSheet(blue);}
+    if(sudoku_array[8].get_isStarting()){ui->cell_Button_9->setStyleSheet(blue);}
+    if(sudoku_array[9].get_isStarting()){ui->cell_Button_10->setStyleSheet(blue);}
+    if(sudoku_array[10].get_isStarting()){ui->cell_Button_11->setStyleSheet(blue);}
+    if(sudoku_array[11].get_isStarting()){ui->cell_Button_12->setStyleSheet(blue);}
+    if(sudoku_array[12].get_isStarting()){ui->cell_Button_13->setStyleSheet(blue);}
+    if(sudoku_array[13].get_isStarting()){ui->cell_Button_14->setStyleSheet(blue);}
+    if(sudoku_array[14].get_isStarting()){ui->cell_Button_15->setStyleSheet(blue);}
+    if(sudoku_array[15].get_isStarting()){ui->cell_Button_16->setStyleSheet(blue);}
+    if(sudoku_array[16].get_isStarting()){ui->cell_Button_17->setStyleSheet(blue);}
+    if(sudoku_array[17].get_isStarting()){ui->cell_Button_18->setStyleSheet(blue);}
+    if(sudoku_array[18].get_isStarting()){ui->cell_Button_19->setStyleSheet(blue);}
+    if(sudoku_array[19].get_isStarting()){ui->cell_Button_20->setStyleSheet(blue);}
+    if(sudoku_array[20].get_isStarting()){ui->cell_Button_21->setStyleSheet(blue);}
+    if(sudoku_array[21].get_isStarting()){ui->cell_Button_22->setStyleSheet(blue);}
+    if(sudoku_array[22].get_isStarting()){ui->cell_Button_23->setStyleSheet(blue);}
+    if(sudoku_array[23].get_isStarting()){ui->cell_Button_24->setStyleSheet(blue);}
+    if(sudoku_array[24].get_isStarting()){ui->cell_Button_25->setStyleSheet(blue);}
+    if(sudoku_array[25].get_isStarting()){ui->cell_Button_26->setStyleSheet(blue);}
+    if(sudoku_array[26].get_isStarting()){ui->cell_Button_27->setStyleSheet(blue);}
+    if(sudoku_array[27].get_isStarting()){ui->cell_Button_28->setStyleSheet(blue);}
+    if(sudoku_array[28].get_isStarting()){ui->cell_Button_29->setStyleSheet(blue);}
+    if(sudoku_array[29].get_isStarting()){ui->cell_Button_30->setStyleSheet(blue);}
+    if(sudoku_array[30].get_isStarting()){ui->cell_Button_31->setStyleSheet(blue);}
+    if(sudoku_array[31].get_isStarting()){ui->cell_Button_32->setStyleSheet(blue);}
+    if(sudoku_array[32].get_isStarting()){ui->cell_Button_33->setStyleSheet(blue);}
+    if(sudoku_array[33].get_isStarting()){ui->cell_Button_34->setStyleSheet(blue);}
+    if(sudoku_array[34].get_isStarting()){ui->cell_Button_35->setStyleSheet(blue);}
+    if(sudoku_array[35].get_isStarting()){ui->cell_Button_36->setStyleSheet(blue);}
+    if(sudoku_array[36].get_isStarting()){ui->cell_Button_37->setStyleSheet(blue);}
+    if(sudoku_array[37].get_isStarting()){ui->cell_Button_38->setStyleSheet(blue);}
+    if(sudoku_array[38].get_isStarting()){ui->cell_Button_39->setStyleSheet(blue);}
+    if(sudoku_array[39].get_isStarting()){ui->cell_Button_40->setStyleSheet(blue);}
+    if(sudoku_array[40].get_isStarting()){ui->cell_Button_41->setStyleSheet(blue);}
+    if(sudoku_array[41].get_isStarting()){ui->cell_Button_42->setStyleSheet(blue);}
+    if(sudoku_array[42].get_isStarting()){ui->cell_Button_43->setStyleSheet(blue);}
+    if(sudoku_array[43].get_isStarting()){ui->cell_Button_44->setStyleSheet(blue);}
+    if(sudoku_array[44].get_isStarting()){ui->cell_Button_45->setStyleSheet(blue);}
+    if(sudoku_array[45].get_isStarting()){ui->cell_Button_46->setStyleSheet(blue);}
+    if(sudoku_array[46].get_isStarting()){ui->cell_Button_47->setStyleSheet(blue);}
+    if(sudoku_array[47].get_isStarting()){ui->cell_Button_48->setStyleSheet(blue);}
+    if(sudoku_array[48].get_isStarting()){ui->cell_Button_49->setStyleSheet(blue);}
+    if(sudoku_array[49].get_isStarting()){ui->cell_Button_50->setStyleSheet(blue);}
+    if(sudoku_array[50].get_isStarting()){ui->cell_Button_51->setStyleSheet(blue);}
+    if(sudoku_array[51].get_isStarting()){ui->cell_Button_52->setStyleSheet(blue);}
+    if(sudoku_array[52].get_isStarting()){ui->cell_Button_53->setStyleSheet(blue);}
+    if(sudoku_array[53].get_isStarting()){ui->cell_Button_54->setStyleSheet(blue);}
+    if(sudoku_array[54].get_isStarting()){ui->cell_Button_55->setStyleSheet(blue);}
+    if(sudoku_array[55].get_isStarting()){ui->cell_Button_56->setStyleSheet(blue);}
+    if(sudoku_array[56].get_isStarting()){ui->cell_Button_57->setStyleSheet(blue);}
+    if(sudoku_array[57].get_isStarting()){ui->cell_Button_58->setStyleSheet(blue);}
+    if(sudoku_array[58].get_isStarting()){ui->cell_Button_59->setStyleSheet(blue);}
+    if(sudoku_array[59].get_isStarting()){ui->cell_Button_60->setStyleSheet(blue);}
+    if(sudoku_array[60].get_isStarting()){ui->cell_Button_61->setStyleSheet(blue);}
+    if(sudoku_array[61].get_isStarting()){ui->cell_Button_62->setStyleSheet(blue);}
+    if(sudoku_array[62].get_isStarting()){ui->cell_Button_63->setStyleSheet(blue);}
+    if(sudoku_array[63].get_isStarting()){ui->cell_Button_64->setStyleSheet(blue);}
+    if(sudoku_array[64].get_isStarting()){ui->cell_Button_65->setStyleSheet(blue);}
+    if(sudoku_array[65].get_isStarting()){ui->cell_Button_66->setStyleSheet(blue);}
+    if(sudoku_array[66].get_isStarting()){ui->cell_Button_67->setStyleSheet(blue);}
+    if(sudoku_array[67].get_isStarting()){ui->cell_Button_68->setStyleSheet(blue);}
+    if(sudoku_array[68].get_isStarting()){ui->cell_Button_69->setStyleSheet(blue);}
+    if(sudoku_array[69].get_isStarting()){ui->cell_Button_70->setStyleSheet(blue);}
+    if(sudoku_array[70].get_isStarting()){ui->cell_Button_71->setStyleSheet(blue);}
+    if(sudoku_array[71].get_isStarting()){ui->cell_Button_72->setStyleSheet(blue);}
+    if(sudoku_array[72].get_isStarting()){ui->cell_Button_73->setStyleSheet(blue);}
+    if(sudoku_array[73].get_isStarting()){ui->cell_Button_74->setStyleSheet(blue);}
+    if(sudoku_array[74].get_isStarting()){ui->cell_Button_75->setStyleSheet(blue);}
+    if(sudoku_array[75].get_isStarting()){ui->cell_Button_76->setStyleSheet(blue);}
+    if(sudoku_array[76].get_isStarting()){ui->cell_Button_77->setStyleSheet(blue);}
+    if(sudoku_array[77].get_isStarting()){ui->cell_Button_78->setStyleSheet(blue);}
+    if(sudoku_array[78].get_isStarting()){ui->cell_Button_79->setStyleSheet(blue);}
+    if(sudoku_array[79].get_isStarting()){ui->cell_Button_80->setStyleSheet(blue);}
+    if(sudoku_array[80].get_isStarting()){ui->cell_Button_81->setStyleSheet(blue);}
 
 }
-
-
-
-

@@ -6,8 +6,6 @@
 #include <vector>
 #include "sudoku_solver.h"
 
-using namespace std;
-
 namespace Ui {
 class sudoku_game;
 }
@@ -16,47 +14,50 @@ class sudoku_game : public QMainWindow
 {
     Q_OBJECT
 
-private:
-
-    vector<cell> starting_array;
-
 public:
     explicit sudoku_game(QWidget *parent = nullptr);
     ~sudoku_game();
 
-    void set_starting_array(vector<cell> sudoku_array);
+    void set_starting_array(std::vector<cell> sudoku_array);
 
-    vector<cell> get_starting_array();
+    void set_backtrack_solution(std::vector<cell> sudoku_array);
 
-    void update_ui(vector<cell> sudoku_array, vector<int> highlighted_cell);
+    std::vector<cell> get_backtrack_solution();
+
+    std::vector<cell> get_starting_array();
+
+    void update_ui(std::vector<cell> sudoku_array, std::vector<int> highlighted_cell);
     //Updates ui grid to match sudoku array state, highlighted cell, and starting squares
 
     void update_cell_value(std::vector<cell> sudoku_array);
-    //used in update_ui function to update cell values
+    //Used in update_ui function to update cell values
 
     void update_notes_value(std::vector<cell> sudoku_array);
-    //used in update_ui function to update note values
+    //Used in update_ui function to update note values
 
     void update_highlight(std::vector<int> highlighted_cell);
-    //used in update_ui function to update highlight
+    //Used in update_ui function to update highlight
 
     void update_starting_squares(std::vector<cell> sudoku_array);
-    //used in update_ui function to update starting squares
+    //Used in update_ui function to update starting squares
 
-    void pass_in_sudoku_array(vector<cell> sudoku_array);
-    //passes in value for sudoku_array
+    void pass_in_sudoku_array(std::vector<cell> sudoku_array);
+    //Passes in value for sudoku_array
 
-    //Initializes first game update
     void start();
-
-    static vector<cell> passed_in_sudoku_array;
-
-    static vector<int> highlighted_cell;
+    //Initializes first game update
 
     void change_highlight(int row, int col);
+    //Changes value of highlighted cell
 
     bool check_valid_move(int value);
+    //Checks if current move is valid given highlighted cell and current state of sudoku array
 
+    int calculate_box(int row, int col);
+    //Calculates box value given row and column
+
+    void set_solution_from_file(std::string solution);
+    //Get solution from selection from solutions.txt. Is used to verify backtracking solution
 
 signals:
     void mainMenu();
@@ -236,11 +237,17 @@ private slots:
 
     void on_mainMenuButton_clicked();
 
-    void on_solve_button_clicked();
+    void on_hint_button_clicked();
+
+    void on_submit_button_clicked();
 
 private:
     Ui::sudoku_game *ui;
-
+    std::vector<cell> starting_array;
+    std::vector<cell> passed_in_sudoku_array;
+    std::vector<int> highlighted_cell;
+    std::string solution_from_file;
+    std::vector<cell> backtrack_solution;
 
 };
 
